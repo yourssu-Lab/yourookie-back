@@ -15,3 +15,8 @@ spring:
           show_sql: true
           use_sql_comments: true
       open-in-view: false
+file:
+  upload:
+    path: /Users/kwon-yejin/Downloads/
+  web:
+    path: http://localhost:8080/files/
