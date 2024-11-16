@@ -4,6 +4,7 @@ import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
 import java.security.SecureRandom
 import java.util.Base64
+import java.util.regex.Pattern
 import org.springframework.stereotype.Component
 
 @Component
@@ -11,9 +12,12 @@ class EncryptPasswordEncoder : PasswordEncoder {
 
     companion object {
         private const val VERSION_PREFIX = "$2a" // Spring Security의 BCryptPasswordEncoder에서 사용하는 default 값
+        private val PATTERN: Pattern = Pattern.compile("^\\$2a\\$\\d{2}\\$\\S{53}$")
         private const val STRENGTH = 10 // Spring Security의 BCryptPasswordEncoder에서 사용하는 default 값
         private val secureRandom = SecureRandom()
         private const val SALT_BYTES_LENGTH = 16
+        private const val SALT_OFFSET = 7
+        private const val ENCODED_SALT_LENGTH = 22
         private const val HASH_VALUE_BYTES_LENGTH = 24
         private const val ENCODED_HASH_VALUE_LENGTH = 31
     }
@@ -70,5 +74,24 @@ class EncryptPasswordEncoder : PasswordEncoder {
 
     private fun formatting(encodedSalt: String, encodedHashValue: String): String {
         return String.format("%s$%02d$%s%s", VERSION_PREFIX, STRENGTH, encodedSalt, encodedHashValue)
+    }
+
+    override fun matches(rawPassword: String, encodedPassword: String): Boolean {
+        if (encodedPassword.isBlank()) {
+            return false
+        }
+        if (!PATTERN.matcher(encodedPassword).matches()) {
+            return false
+        }
+
+        val encodedSalt = extractSalt(encodedPassword)
+        val encodedHashValue = generateEncodedHashedValue(rawPassword, encodedSalt)
+        val expectEncodedPassword = formatting(encodedSalt, encodedHashValue)
+
+        return expectEncodedPassword == encodedPassword
+    }
+
+    private fun extractSalt(encodedPassword: String): String {
+        return encodedPassword.substring(SALT_OFFSET, SALT_OFFSET + ENCODED_SALT_LENGTH)
     }
 }
