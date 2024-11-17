@@ -4,8 +4,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 
 @SpringBootApplication
-class OpenSsUpotApplication
+class OpenSSUpotApplication
 
 fun main(args: Array<String>) {
-	runApplication<OpenSsUpotApplication>(*args)
+    runApplication<OpenSSUpotApplication>(*args)
 }
