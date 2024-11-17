@@ -34,4 +34,8 @@ class OrganizationService (
 
         return savedOrganization.id!!
     }
+
+    fun checkIsUnique(email: String): Boolean {
+        return !organizationReader.existByEmail(email)
+    }
 }
