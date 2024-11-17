@@ -13,7 +13,7 @@ class FileService {
     }
 
     @Value("\${file.upload.path}")
-    private val fileStoreDir: String? = null
+    lateinit var fileStoreDir: String
 
     fun read(storeName: String): Resource {
         val storePath = fileStoreDir + storeName
@@ -24,8 +24,9 @@ class FileService {
     }
 
     private fun validateFile(file: UrlResource, storePath: String) {
+        val fileName = storePath.substring(fileStoreDir.length)
         if (!file.exists() || !file.isReadable) {
-            throw ReadFailureException("파일이 존재하지 않거나 읽을 수 없습니다: $storePath")
+            throw ReadFailureException("파일[$fileName]이 존재하지 않거나 읽을 수 없습니다.")
         }
     }
 }
