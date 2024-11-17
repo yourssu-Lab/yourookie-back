@@ -38,4 +38,10 @@ class OrganizationService (
     fun checkIsUnique(email: String): Boolean {
         return !organizationReader.existByEmail(email)
     }
+
+    fun searchByNameKeyword(nameKeyword: String): ReadOrganizationResult {
+        val organizations: List<Organization> = organizationReader.searchByNameKeyword(nameKeyword)
+
+        return ReadOrganizationResult.from(organizations)
+    }
 }

@@ -17,4 +17,8 @@ class OrganizationReader(
         return organizationRepository.findByEmail(email)
             ?: throw OrganizationNotFoundException("$email 로 가입한 이력이 없습니다.")
     }
+
+    fun searchByNameKeyword(keyword: String): List<Organization> {
+        return organizationRepository.searchByNameKeyword(keyword)
+    }
 }
