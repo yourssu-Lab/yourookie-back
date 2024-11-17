@@ -1,6 +1,7 @@
 package com.yourssu.openssupot.application.domain.organization
 
 import com.yourssu.openssupot.domain.domain.organization.OrganizationService
+import com.yourssu.openssupot.domain.domain.organization.ReadOrganizationResult
 import jakarta.validation.Valid
 import java.net.URI
 import org.springframework.http.HttpStatus
@@ -33,6 +34,16 @@ class OrganizationController(
     ): ResponseEntity<CheckEmailResponse> {
         val isUnique = organizationService.checkIsUnique(email)
         val response = CheckEmailResponse(isUnique)
+
+        return ResponseEntity.status(HttpStatus.OK).body(response)
+    }
+
+    @GetMapping("/organizations")
+    fun readByName(
+        @RequestParam name: String,
+    ): ResponseEntity<List<ReadOrganizationResponse>> {
+        val organization: ReadOrganizationResult = organizationService.searchByNameKeyword(name)
+        val response: List<ReadOrganizationResponse> = ReadOrganizationResponse.from(organization)
 
         return ResponseEntity.status(HttpStatus.OK).body(response)
     }

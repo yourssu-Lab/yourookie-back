@@ -20,4 +20,8 @@ class OrganizationRepositoryImpl(
     override fun findByEmail(email: String): Organization? {
         return jpaOrganizationRepository.findByEmail(email)?.toDomain()
     }
+
+    override fun searchByNameKeyword(keyword: String): List<Organization> {
+        return jpaOrganizationRepository.searchByNameKeyword(keyword).map { it.toDomain() }
+    }
 }
