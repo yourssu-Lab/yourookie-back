@@ -4,6 +4,13 @@ import com.yourssu.openssupot.domain.domain.file.InvalidFileException
 import com.yourssu.openssupot.domain.domain.file.ReadFailureException
 import com.yourssu.openssupot.domain.domain.file.StoreFailureException
 import com.yourssu.openssupot.domain.domain.file.UnsupportedFileExtensionException
+import com.yourssu.openssupot.domain.domain.organization.DuplicateEmailException
+import com.yourssu.openssupot.domain.domain.organization.InvalidEmailException
+import com.yourssu.openssupot.domain.domain.organization.InvalidOrganizationNameException
+import com.yourssu.openssupot.domain.domain.organization.InvalidPasswordException
+import com.yourssu.openssupot.domain.domain.organization.PasswordNotEncryptedException
+import com.yourssu.openssupot.domain.support.security.password.PasswordEncodingFailureException
+import com.yourssu.openssupot.domain.support.security.token.InvalidTokenException
 import java.util.stream.Collectors
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -36,6 +43,48 @@ class GlobalExceptionHandler {
     @ExceptionHandler(ReadFailureException::class)
     fun handleReadFailureException(e: ReadFailureException): ResponseEntity<ExceptionResponse> {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
+            .body(ExceptionResponse(e.message))
+    }
+
+    @ExceptionHandler(DuplicateEmailException::class)
+    fun handleDuplicateEmailException(e: DuplicateEmailException): ResponseEntity<ExceptionResponse> {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+            .body(ExceptionResponse(e.message))
+    }
+
+    @ExceptionHandler(InvalidEmailException::class)
+    fun handleInvalidEmailException(e: InvalidEmailException): ResponseEntity<ExceptionResponse> {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+            .body(ExceptionResponse(e.message))
+    }
+
+    @ExceptionHandler(InvalidOrganizationNameException::class)
+    fun handleInvalidOrganizationNameException(e: InvalidOrganizationNameException): ResponseEntity<ExceptionResponse> {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+            .body(ExceptionResponse(e.message))
+    }
+
+    @ExceptionHandler(InvalidPasswordException::class)
+    fun handleInvalidPasswordException(e: InvalidPasswordException): ResponseEntity<ExceptionResponse> {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+            .body(ExceptionResponse(e.message))
+    }
+
+    @ExceptionHandler(PasswordNotEncryptedException::class)
+    fun handlePasswordNotEncryptedException(e: PasswordNotEncryptedException): ResponseEntity<ExceptionResponse> {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+            .body(ExceptionResponse(e.message))
+    }
+
+    @ExceptionHandler(PasswordEncodingFailureException::class)
+    fun handlePasswordEncodingFailureException(e: PasswordEncodingFailureException): ResponseEntity<ExceptionResponse> {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+            .body(ExceptionResponse(e.message))
+    }
+
+    @ExceptionHandler(InvalidTokenException::class)
+    fun handleInvalidTokenException(e: InvalidTokenException): ResponseEntity<ExceptionResponse> {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
             .body(ExceptionResponse(e.message))
     }
 
