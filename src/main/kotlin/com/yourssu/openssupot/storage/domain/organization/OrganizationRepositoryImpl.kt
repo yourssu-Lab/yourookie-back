@@ -16,4 +16,8 @@ class OrganizationRepositoryImpl(
     override fun existsByEmail(email: String): Boolean {
         return jpaOrganizationRepository.existsByEmail(email)
     }
+
+    override fun findByEmail(email: String): Organization? {
+        return jpaOrganizationRepository.findByEmail(email)?.toDomain()
+    }
 }
