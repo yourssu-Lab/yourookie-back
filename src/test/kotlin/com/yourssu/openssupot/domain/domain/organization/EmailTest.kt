@@ -41,4 +41,3 @@ class EmailTest {
         assertThat(email.emailAddress).isEqualTo(validEmail)
     }
 }
-
