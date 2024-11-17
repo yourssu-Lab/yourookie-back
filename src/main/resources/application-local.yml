@@ -20,3 +20,9 @@ file:
     path: /Users/kwon-yejin/Downloads/
   web:
     path: http://localhost:8080/files/
+token:
+  jwt:
+    access-key: ThisIsLocalAccessKeyThisIsLocalAccessKey
+    refresh-key: ThisIsLocalRefreshKeyThisIsLocalRefreshKey
+    access-expired-hours: 1 # 1시간
+    refresh-expired-hours: 336  # 14일
