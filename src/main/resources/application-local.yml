@@ -1,20 +1,25 @@
 spring:
   application:
     name: OpenSSUpot
-    datasource:
-      url: jdbc:h2:tcp://localhost/~/test
-      username: sa
-      driver-class-name: org.h2.Driver
-    jpa:
+  datasource:
+    url: jdbc:h2:mem:testdb
+    username: sa
+    driver-class-name: org.h2.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    properties:
       hibernate:
-        ddl-auto: create-drop
-      properties:
-        hibernate:
-          format_sql: true
-          dialect: org.hibernate.dialect.H2Dialect
-          show_sql: true
-          use_sql_comments: true
-      open-in-view: false
+        format_sql: true
+        dialect: org.hibernate.dialect.H2Dialect
+        show_sql: true
+        use_sql_comments: true
+    open-in-view: false
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 10MB
+      max-request-size: 10MB
 file:
   upload:
     path: /Users/kwon-yejin/Downloads/
