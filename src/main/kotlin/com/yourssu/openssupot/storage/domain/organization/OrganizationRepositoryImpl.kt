@@ -12,4 +12,8 @@ class OrganizationRepositoryImpl(
     override fun save(organization: Organization): Organization {
         return jpaOrganizationRepository.save(OrganizationEntity.from(organization)).toDomain()
     }
+
+    override fun existsByEmail(email: String): Boolean {
+        return jpaOrganizationRepository.existsByEmail(email)
+    }
 }
