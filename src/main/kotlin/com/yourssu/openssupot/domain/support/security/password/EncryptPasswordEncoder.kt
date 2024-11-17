@@ -4,7 +4,6 @@ import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
 import java.security.SecureRandom
 import java.util.Base64
-import java.util.regex.Pattern
 import org.springframework.stereotype.Component
 
 @Component
@@ -12,7 +11,6 @@ class EncryptPasswordEncoder : PasswordEncoder {
 
     companion object {
         private const val VERSION_PREFIX = "$2a" // Spring Security의 BCryptPasswordEncoder에서 사용하는 default 값
-        private val PATTERN: Pattern = Pattern.compile("^\\$2a\\$\\d{2}\\$\\S{53}$")
         private const val STRENGTH = 10 // Spring Security의 BCryptPasswordEncoder에서 사용하는 default 값
         private val secureRandom = SecureRandom()
         private const val SALT_BYTES_LENGTH = 16
@@ -77,10 +75,7 @@ class EncryptPasswordEncoder : PasswordEncoder {
     }
 
     override fun matches(rawPassword: String, encodedPassword: String): Boolean {
-        if (encodedPassword.isBlank()) {
-            return false
-        }
-        if (!PATTERN.matcher(encodedPassword).matches()) {
+        if (EncryptPasswordValidator.isNotEncrypted(encodedPassword)) {
             return false
         }
 
