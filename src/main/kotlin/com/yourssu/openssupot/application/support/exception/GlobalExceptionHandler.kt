@@ -1,5 +1,6 @@
 package com.yourssu.openssupot.application.support.exception
 
+import com.yourssu.openssupot.domain.domain.authentication.PasswordNotMatchException
 import com.yourssu.openssupot.domain.domain.file.InvalidFileException
 import com.yourssu.openssupot.domain.domain.file.ReadFailureException
 import com.yourssu.openssupot.domain.domain.file.StoreFailureException
@@ -8,6 +9,7 @@ import com.yourssu.openssupot.domain.domain.organization.DuplicateEmailException
 import com.yourssu.openssupot.domain.domain.organization.InvalidEmailException
 import com.yourssu.openssupot.domain.domain.organization.InvalidOrganizationNameException
 import com.yourssu.openssupot.domain.domain.organization.InvalidPasswordException
+import com.yourssu.openssupot.domain.domain.organization.OrganizationNotFoundException
 import com.yourssu.openssupot.domain.domain.organization.PasswordNotEncryptedException
 import com.yourssu.openssupot.domain.support.security.password.PasswordEncodingFailureException
 import com.yourssu.openssupot.domain.support.security.token.InvalidTokenException
@@ -21,6 +23,12 @@ import org.springframework.web.bind.annotation.RestControllerAdvice
 
 @RestControllerAdvice
 class GlobalExceptionHandler {
+
+    @ExceptionHandler(PasswordNotMatchException::class)
+    fun handlePasswordNotMatchException(e: PasswordNotMatchException): ResponseEntity<ExceptionResponse> {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+            .body(ExceptionResponse(e.message))
+    }
 
     @ExceptionHandler(InvalidFileException::class)
     fun handleInvalidFileException(e: InvalidFileException): ResponseEntity<ExceptionResponse> {
@@ -67,6 +75,12 @@ class GlobalExceptionHandler {
     @ExceptionHandler(InvalidPasswordException::class)
     fun handleInvalidPasswordException(e: InvalidPasswordException): ResponseEntity<ExceptionResponse> {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+            .body(ExceptionResponse(e.message))
+    }
+
+    @ExceptionHandler(OrganizationNotFoundException::class)
+    fun handleOrganizationNotFoundException(e: OrganizationNotFoundException): ResponseEntity<ExceptionResponse> {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
             .body(ExceptionResponse(e.message))
     }
 
