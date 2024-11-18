@@ -13,6 +13,7 @@ import com.yourssu.openssupot.domain.domain.organization.InvalidOrganizationName
 import com.yourssu.openssupot.domain.domain.organization.InvalidPasswordException
 import com.yourssu.openssupot.domain.domain.organization.OrganizationNotFoundException
 import com.yourssu.openssupot.domain.domain.organization.PasswordNotEncryptedException
+import com.yourssu.openssupot.domain.domain.space.InvalidCapacityException
 import com.yourssu.openssupot.domain.support.security.password.PasswordEncodingFailureException
 import com.yourssu.openssupot.domain.support.security.token.InvalidTokenException
 import java.util.stream.Collectors
@@ -101,6 +102,12 @@ class GlobalExceptionHandler {
     @ExceptionHandler(PasswordNotEncryptedException::class)
     fun handlePasswordNotEncryptedException(e: PasswordNotEncryptedException): ResponseEntity<ExceptionResponse> {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+            .body(ExceptionResponse(e.message))
+    }
+
+    @ExceptionHandler(InvalidCapacityException::class)
+    fun handleInvalidCapacityException(e: InvalidCapacityException): ResponseEntity<ExceptionResponse> {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
             .body(ExceptionResponse(e.message))
     }
 
