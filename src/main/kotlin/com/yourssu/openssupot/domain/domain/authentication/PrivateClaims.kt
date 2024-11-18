@@ -3,18 +3,18 @@ package com.yourssu.openssupot.domain.domain.authentication
 import io.jsonwebtoken.Claims
 
 data class PrivateClaims(
-    val userId: Long,
+    val organizationId: Long,
 ) {
 
     companion object {
-        private const val USER_ID_KEY_NAME = "userId"
+        private const val ORGANIZATION_ID_KEY_NAME = "organizationId"
 
         fun from(claims: Claims): PrivateClaims {
-            return PrivateClaims((claims[USER_ID_KEY_NAME] as Number).toLong())
+            return PrivateClaims((claims[ORGANIZATION_ID_KEY_NAME] as Number).toLong())
         }
     }
 
     fun toMap(): Map<String, Any> {
-        return mapOf(USER_ID_KEY_NAME to userId)
+        return mapOf(ORGANIZATION_ID_KEY_NAME to organizationId)
     }
 }

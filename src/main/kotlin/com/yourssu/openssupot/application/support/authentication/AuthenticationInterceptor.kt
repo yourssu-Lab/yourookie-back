@@ -26,7 +26,7 @@ class AuthenticationInterceptor(
 
         val privateClaims: PrivateClaims = decode(accessToken)
 
-        if (!organizationRepository.existsById(privateClaims.userId)) {
+        if (!organizationRepository.existsById(privateClaims.organizationId)) {
             throw NoSuchOrganizationException("존재하지 않는 단체의 토큰입니다.")
         }
 
