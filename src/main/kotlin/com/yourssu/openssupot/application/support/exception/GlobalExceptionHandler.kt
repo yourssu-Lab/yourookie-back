@@ -1,5 +1,7 @@
 package com.yourssu.openssupot.application.support.exception
 
+import com.yourssu.openssupot.application.support.authentication.LoginRequiredException
+import com.yourssu.openssupot.application.support.authentication.NoSuchOrganizationException
 import com.yourssu.openssupot.domain.domain.authentication.PasswordNotMatchException
 import com.yourssu.openssupot.domain.domain.file.InvalidFileException
 import com.yourssu.openssupot.domain.domain.file.ReadFailureException
@@ -23,6 +25,18 @@ import org.springframework.web.bind.annotation.RestControllerAdvice
 
 @RestControllerAdvice
 class GlobalExceptionHandler {
+
+    @ExceptionHandler(LoginRequiredException::class)
+    fun handleLoginRequiredException(e: LoginRequiredException): ResponseEntity<ExceptionResponse> {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+            .body(ExceptionResponse(e.message))
+    }
+
+    @ExceptionHandler(NoSuchOrganizationException::class)
+    fun handleNoSuchOrganizationException(e: NoSuchOrganizationException): ResponseEntity<ExceptionResponse> {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+            .body(ExceptionResponse(e.message))
+    }
 
     @ExceptionHandler(PasswordNotMatchException::class)
     fun handlePasswordNotMatchException(e: PasswordNotMatchException): ResponseEntity<ExceptionResponse> {
