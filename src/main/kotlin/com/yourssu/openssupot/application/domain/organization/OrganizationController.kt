@@ -42,8 +42,10 @@ class OrganizationController(
     fun readByName(
         @RequestParam name: String,
     ): ResponseEntity<List<ReadOrganizationResponse>> {
-        val organization: ReadOrganizationsResult = organizationService.searchByNameKeyword(name)
-        val response: List<ReadOrganizationResponse> = ReadOrganizationResponse.from(organization)
+        val result: ReadOrganizationsResult = organizationService.searchByNameKeyword(name)
+        val response: List<ReadOrganizationResponse> = result.organizationDtos.map {
+            ReadOrganizationResponse.from(it)
+        }
 
         return ResponseEntity.status(HttpStatus.OK).body(response)
     }
