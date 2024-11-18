@@ -36,9 +36,9 @@ class OrganizationService (
         return !organizationReader.existByEmail(email)
     }
 
-    fun searchByNameKeyword(nameKeyword: String): ReadOrganizationResult {
+    fun searchByNameKeyword(nameKeyword: String): ReadOrganizationsResult {
         val organizations: List<Organization> = organizationReader.searchByNameKeyword(nameKeyword)
 
-        return ReadOrganizationResult.from(organizations)
+        return ReadOrganizationsResult.from(organizations)
     }
 }

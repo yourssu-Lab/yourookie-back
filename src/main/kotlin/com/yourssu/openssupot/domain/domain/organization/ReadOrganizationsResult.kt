@@ -1,11 +1,11 @@
 package com.yourssu.openssupot.domain.domain.organization
 
-data class ReadOrganizationResult(
+data class ReadOrganizationsResult(
     val organizationDtos: List<OrganizationDto>,
 ) {
 
     companion object {
-        fun from(organizations: List<Organization>): ReadOrganizationResult = ReadOrganizationResult(
+        fun from(organizations: List<Organization>): ReadOrganizationsResult = ReadOrganizationsResult(
             organizations.map {
                 OrganizationDto(
                     id = it.id!!,

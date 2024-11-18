@@ -1,6 +1,6 @@
 package com.yourssu.openssupot.application.domain.organization
 
-import com.yourssu.openssupot.domain.domain.organization.ReadOrganizationResult
+import com.yourssu.openssupot.domain.domain.organization.ReadOrganizationsResult
 
 data class ReadOrganizationResponse(
 
@@ -10,7 +10,7 @@ data class ReadOrganizationResponse(
     val description: String?,
 ) {
     companion object {
-        fun from(result: ReadOrganizationResult): List<ReadOrganizationResponse> {
+        fun from(result: ReadOrganizationsResult): List<ReadOrganizationResponse> {
             return result.organizationDtos.map {
                 ReadOrganizationResponse(
                     id = it.id,
