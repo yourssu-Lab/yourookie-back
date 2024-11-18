@@ -13,6 +13,10 @@ class OrganizationRepositoryImpl(
         return jpaOrganizationRepository.save(OrganizationEntity.from(organization)).toDomain()
     }
 
+    override fun existsById(id: Long): Boolean {
+        return jpaOrganizationRepository.existsById(id)
+    }
+
     override fun existsByEmail(email: String): Boolean {
         return jpaOrganizationRepository.existsByEmail(email)
     }
