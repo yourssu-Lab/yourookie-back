@@ -21,4 +21,9 @@ class OrganizationReader(
     fun searchByNameKeyword(keyword: String): List<Organization> {
         return organizationRepository.searchByNameKeyword(keyword)
     }
+
+    fun getById(id: Long): Organization {
+        return organizationRepository.findById(id)
+            ?: throw OrganizationNotFoundException("지정한 단체를 찾을 수 없습니다.")
+    }
 }
