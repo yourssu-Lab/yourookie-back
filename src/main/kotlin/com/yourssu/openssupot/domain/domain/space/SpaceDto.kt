@@ -14,4 +14,17 @@ data class SpaceDto(
     val closingTime: LocalTime,
     val capacity: Int,
 ) {
+
+    companion object {
+        fun from(space: Space): SpaceDto = SpaceDto(
+            id = space.id!!,
+            organization = OrganizationDto.from(space.organization),
+            name = space.name,
+            location = space.location,
+            spaceImageUrl = space.spaceImageUrl,
+            openingTime = space.getOpeningTime(),
+            closingTime = space.getClosingTime(),
+            capacity = space.getCapacityValue(),
+        )
+    }
 }
