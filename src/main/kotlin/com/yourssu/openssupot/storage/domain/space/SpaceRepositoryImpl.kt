@@ -13,4 +13,8 @@ class SpaceRepositoryImpl(
     override fun save(space: Space): Space {
         return jpaSpaceRepository.save(SpaceEntity.from(space)).toDomain()
     }
+
+    override fun findAllByOrganizationId(organizationId: Long): List<Space> {
+        return jpaSpaceRepository.findAllByOrganizationId(organizationId).map { it.toDomain() }
+    }
 }

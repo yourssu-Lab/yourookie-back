@@ -1,6 +1,6 @@
 package com.yourssu.openssupot.application.domain.organization
 
-import com.yourssu.openssupot.domain.domain.organization.ReadOrganizationResult
+import com.yourssu.openssupot.domain.domain.organization.OrganizationDto
 
 data class ReadOrganizationResponse(
 
@@ -9,16 +9,13 @@ data class ReadOrganizationResponse(
     val logoImageUrl: String?,
     val description: String?,
 ) {
+
     companion object {
-        fun from(result: ReadOrganizationResult): List<ReadOrganizationResponse> {
-            return result.organizationDtos.map {
-                ReadOrganizationResponse(
-                    id = it.id,
-                    name = it.name,
-                    logoImageUrl = it.logoImageUrl,
-                    description = it.description,
-                )
-            }
-        }
+        fun from(organizationDto: OrganizationDto) = ReadOrganizationResponse(
+            id = organizationDto.id,
+            name = organizationDto.name,
+            logoImageUrl = organizationDto.logoImageUrl,
+            description = organizationDto.description,
+        )
     }
 }

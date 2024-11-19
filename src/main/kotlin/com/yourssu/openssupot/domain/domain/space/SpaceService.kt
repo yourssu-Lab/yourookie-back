@@ -10,6 +10,7 @@ class SpaceService(
     private val fileUploader: FileUploader,
     private val organizationReader: OrganizationReader,
     private val spaceWriter: SpaceWriter,
+    private val spaceReader: SpaceReader,
 ) {
 
     fun create(
@@ -20,5 +21,12 @@ class SpaceService(
         val savedSpace = spaceWriter.write(command, organization, spaceImageUrl)
 
         return savedSpace.id!!
+    }
+
+    fun readAllByOrganizationId(organizationId: Long): ReadSpacesResult {
+        val organization: Organization = organizationReader.getById(organizationId)
+        val spaces: List<Space> = spaceReader.readAllByOrganization(organization)
+
+        return ReadSpacesResult.from(spaces)
     }
 }
