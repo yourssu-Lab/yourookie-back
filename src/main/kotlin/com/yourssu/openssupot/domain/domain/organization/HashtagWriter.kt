@@ -32,5 +32,4 @@ class HashtagWriter(
 
         return savedHashtags
     }
-
 }
