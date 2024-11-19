@@ -2,6 +2,7 @@ package com.yourssu.openssupot.storage.domain.organization
 
 import com.yourssu.openssupot.domain.domain.organization.Hashtag
 import com.yourssu.openssupot.domain.domain.organization.HashtagRepository
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Repository
 
 @Repository
@@ -11,6 +12,10 @@ class HashtagRepositoryImpl(
 
     override fun save(hashtag: Hashtag): Hashtag {
         return jpaHashtagRepository.save(HashtagEntity.from(hashtag)).toDomain()
+    }
+
+    override fun findById(id: Long): Hashtag? {
+        return jpaHashtagRepository.findByIdOrNull(id)?.toDomain()
     }
 
     override fun findByName(name: String): Hashtag? {

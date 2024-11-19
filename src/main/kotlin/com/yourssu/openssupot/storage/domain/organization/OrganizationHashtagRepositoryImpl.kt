@@ -19,4 +19,8 @@ class OrganizationHashtagRepositoryImpl(
     ): OrganizationHashtag? {
         return jpaOrganizationHashtagRepository.findByOrganizationIdAndHashtagId(organizationId, hashtagId)?.toDomain()
     }
+
+    override fun findAllByOrganizationId(organizationId: Long): List<OrganizationHashtag> {
+        return jpaOrganizationHashtagRepository.findAllByOrganizationId(organizationId).map { it.toDomain() }
+    }
 }

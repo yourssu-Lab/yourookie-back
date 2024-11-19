@@ -7,4 +7,6 @@ interface JpaOrganizationHashtagRepository : JpaRepository<OrganizationHashtagEn
         organizationId: Long,
         hashtagId: Long
     ): OrganizationHashtagEntity?
+
+    fun findAllByOrganizationId(organizationId: Long): List<OrganizationHashtagEntity>
 }

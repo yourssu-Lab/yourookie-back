@@ -8,6 +8,7 @@ data class ReadOrganizationResponse(
     val name: String,
     val logoImageUrl: String?,
     val description: String?,
+    val hashtags: List<String> = emptyList(),
 ) {
 
     companion object {
@@ -16,6 +17,7 @@ data class ReadOrganizationResponse(
             name = organizationDto.name,
             logoImageUrl = organizationDto.logoImageUrl,
             description = organizationDto.description,
+            hashtags = organizationDto.hashtags,
         )
     }
 }

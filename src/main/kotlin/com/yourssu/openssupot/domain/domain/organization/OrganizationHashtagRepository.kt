@@ -8,4 +8,6 @@ interface OrganizationHashtagRepository {
         organizationId: Long,
         hashtagId: Long
     ): OrganizationHashtag?
+
+    fun findAllByOrganizationId(organizationId: Long): List<OrganizationHashtag>
 }
