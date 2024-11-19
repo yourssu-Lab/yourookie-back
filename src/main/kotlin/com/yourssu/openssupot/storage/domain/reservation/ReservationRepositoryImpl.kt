@@ -19,6 +19,15 @@ class ReservationRepositoryImpl(
         startDateTime: LocalDateTime,
         endDateTime: LocalDateTime
     ): Boolean {
-        return jpaReservationRepository.existsBySpaceIdAndDateRange(spaceId, startDateTime, endDateTime)
+        return jpaReservationRepository.existsBySpaceIdAndDateTimeRange(spaceId, startDateTime, endDateTime)
+    }
+
+    override fun findAllBySpaceIdAndDateTimeRange(
+        spaceId: Long,
+        startOfDay: LocalDateTime,
+        endOfDay: LocalDateTime
+    ): List<Reservation> {
+        return jpaReservationRepository.findAllBySpaceIdAndDateRange(spaceId, startOfDay, endOfDay)
+            .map { it.toDomain() }
     }
 }

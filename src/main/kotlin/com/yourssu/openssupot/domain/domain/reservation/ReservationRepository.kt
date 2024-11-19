@@ -11,4 +11,10 @@ interface ReservationRepository {
         startDateTime: LocalDateTime,
         endDateTime: LocalDateTime
     ): Boolean
+
+    fun findAllBySpaceIdAndDateTimeRange(
+        spaceId: Long,
+        startOfDay: LocalDateTime,
+        endOfDay: LocalDateTime
+    ): List<Reservation>
 }

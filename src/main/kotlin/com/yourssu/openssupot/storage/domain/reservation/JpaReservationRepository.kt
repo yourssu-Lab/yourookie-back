@@ -18,4 +18,17 @@ interface JpaReservationRepository : JpaRepository<ReservationEntity, Long> {
         startDateTime: LocalDateTime,
         endDateTime: LocalDateTime
     ): Boolean
+
+    @Query("""
+    SELECT r
+    FROM ReservationEntity r
+    WHERE r.space.id = :spaceId 
+    AND r.startDateTime < :endOfDay 
+    AND r.endDateTime > :startOfDay
+    """)
+    fun findAllBySpaceIdAndDateRange(
+        spaceId: Long,
+        startOfDay: LocalDateTime,
+        endOfDay: LocalDateTime
+    ): List<ReservationEntity>
 }
