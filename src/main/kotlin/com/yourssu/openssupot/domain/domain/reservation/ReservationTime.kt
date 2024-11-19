@@ -6,6 +6,9 @@ class ReservationTime(
     val startDateTime: LocalDateTime,
     val endDateTime: LocalDateTime,
 ) {
+    fun isBetween(rangeStart: LocalDateTime, rangeEnd: LocalDateTime): Boolean {
+        return (rangeStart <= startDateTime) && (endDateTime <= rangeEnd)
+    }
 
     init {
         if (startDateTime.isAfter(endDateTime)) {

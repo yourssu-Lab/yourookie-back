@@ -1,6 +1,7 @@
 package com.yourssu.openssupot.domain.domain.reservation
 
 import java.time.LocalDateTime
+import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
@@ -40,5 +41,39 @@ class ReservationTimeTest {
 
         // when & then
         assertDoesNotThrow { ReservationTime(startDateTime, endDateTime) }
+    }
+
+    @Test
+    fun `인자로 주어진 두 시간 사이의 예약이라면 true를 반환한다`() {
+        // given
+        val rangeStart = LocalDateTime.of(2021, 10, 1, 9, 0)
+        val rangeEnd = LocalDateTime.of(2021, 10, 1, 13, 0)
+        val reservationTime = ReservationTime(
+            LocalDateTime.of(2021, 10, 1, 10, 0),
+            LocalDateTime.of(2021, 10, 1, 12, 0)
+        )
+
+        // when
+        val actual = reservationTime.isBetween(rangeStart, rangeEnd)
+
+        // then
+        assertThat(actual).isTrue()
+    }
+
+    @Test
+    fun `인자로 주어진 두 시간 사이의 예약이 아니라면 false를 반환한다`() {
+        // given
+        val rangeStart = LocalDateTime.of(2021, 10, 1, 9, 0)
+        val rangeEnd = LocalDateTime.of(2021, 10, 1, 11, 0)
+        val reservationTime = ReservationTime(
+            LocalDateTime.of(2021, 10, 1, 10, 0),
+            LocalDateTime.of(2021, 10, 1, 12, 0)
+        )
+
+        // when
+        val actual = reservationTime.isBetween(rangeStart, rangeEnd)
+
+        // then
+        assertThat(actual).isFalse()
     }
 }
