@@ -15,7 +15,9 @@ import com.yourssu.openssupot.domain.domain.organization.OrganizationNotFoundExc
 import com.yourssu.openssupot.domain.domain.organization.PasswordNotEncryptedException
 import com.yourssu.openssupot.domain.domain.reservation.InvalidReservationException
 import com.yourssu.openssupot.domain.domain.reservation.InvalidReservationTimeException
+import com.yourssu.openssupot.domain.domain.reservation.ReservationConflictException
 import com.yourssu.openssupot.domain.domain.space.InvalidCapacityException
+import com.yourssu.openssupot.domain.domain.space.SpaceNotFoundException
 import com.yourssu.openssupot.domain.support.security.password.PasswordEncodingFailureException
 import com.yourssu.openssupot.domain.support.security.token.InvalidTokenException
 import java.util.stream.Collectors
@@ -119,9 +121,21 @@ class GlobalExceptionHandler {
             .body(ExceptionResponse(e.message))
     }
 
+    @ExceptionHandler(ReservationConflictException::class)
+    fun handleReservationConflictException(e: ReservationConflictException): ResponseEntity<ExceptionResponse> {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+            .body(ExceptionResponse(e.message))
+    }
+
     @ExceptionHandler(InvalidCapacityException::class)
     fun handleInvalidCapacityException(e: InvalidCapacityException): ResponseEntity<ExceptionResponse> {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+            .body(ExceptionResponse(e.message))
+    }
+
+    @ExceptionHandler(SpaceNotFoundException::class)
+    fun handleSpaceNotFoundException(e: SpaceNotFoundException): ResponseEntity<ExceptionResponse> {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
             .body(ExceptionResponse(e.message))
     }
 

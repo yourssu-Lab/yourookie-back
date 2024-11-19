@@ -18,6 +18,10 @@ class Space(
         return operatingTime.isAvailableTime(reservationTime)
     }
 
+    fun getEncryptedReservationPassword(): String {
+        return organization.encryptedReservationPassword
+    }
+
     fun getOpeningTime(): LocalTime {
         return operatingTime.openingTime
     }
