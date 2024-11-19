@@ -6,7 +6,8 @@ import org.springframework.transaction.annotation.Transactional
 @Component
 @Transactional(readOnly = true)
 class OrganizationReader(
-    private val organizationRepository: OrganizationRepository
+    private val organizationRepository: OrganizationRepository,
+    private val hashtagReader: HashtagReader
 ) {
 
     fun existByEmail(email: String): Boolean {
@@ -14,16 +15,34 @@ class OrganizationReader(
     }
 
     fun getByEmail(email: String): Organization {
-        return organizationRepository.findByEmail(email)
-            ?: throw OrganizationNotFoundException("$email 로 가입한 이력이 없습니다.")
+        val savedOrganization = (organizationRepository.findByEmail(email)
+            ?: throw OrganizationNotFoundException("$email 로 가입한 이력이 없습니다."))
+
+        val hashtags: List<Hashtag> = hashtagReader.readAllByOrganizationId(savedOrganization.id!!)
+
+        savedOrganization.addHashtags(hashtags)
+
+        return savedOrganization
     }
 
     fun searchByNameKeyword(keyword: String): List<Organization> {
-        return organizationRepository.searchByNameKeyword(keyword)
+        val savedOrganizations: List<Organization> = organizationRepository.searchByNameKeyword(keyword)
+        for (savedOrganization in savedOrganizations) {
+            val hashtags: List<Hashtag> = hashtagReader.readAllByOrganizationId(savedOrganization.id!!)
+            savedOrganization.addHashtags(hashtags)
+        }
+
+        return savedOrganizations
     }
 
     fun getById(id: Long): Organization {
-        return organizationRepository.findById(id)
-            ?: throw OrganizationNotFoundException("지정한 단체를 찾을 수 없습니다.")
+        val savedOrganization: Organization = (organizationRepository.findById(id)
+            ?: throw OrganizationNotFoundException("지정한 단체를 찾을 수 없습니다."))
+
+        val hashtags: List<Hashtag> = hashtagReader.readAllByOrganizationId(savedOrganization.id!!)
+
+        savedOrganization.addHashtags(hashtags)
+
+        return savedOrganization
     }
 }

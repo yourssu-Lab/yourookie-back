@@ -19,6 +19,8 @@ data class CreateOrganizationRequest(
 
     @NotBlank(message = "예약 비밀번호가 입력되지 않았습니다.")
     val reservationPassword: String,
+
+    val hashtags: List<String> = emptyList(),
 ) {
     fun toCommand(logoImage: MultipartFile?): CreateOrganizationCommand {
         return CreateOrganizationCommand(
@@ -28,6 +30,7 @@ data class CreateOrganizationRequest(
             logoImage = logoImage,
             description = description,
             rawReservationPassword = reservationPassword,
+            hashtags = hashtags
         )
     }
 }

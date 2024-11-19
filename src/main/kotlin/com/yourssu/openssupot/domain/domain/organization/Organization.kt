@@ -10,6 +10,7 @@ class Organization(
     val logoImageUrl: String? = null,
     val description: String? = null,
     val encryptedReservationPassword: String,
+    val hashtags: MutableList<Hashtag> = mutableListOf(),
 ) {
 
     init {
@@ -30,32 +31,19 @@ class Organization(
         return name.name
     }
 
+    fun getHashtagValues(): List<String> = hashtags.map { it.name }
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
 
         other as Organization
 
-        if (id != other.id) return false
-        if (email != other.email) return false
-        if (encryptedPassword != other.encryptedPassword) return false
-        if (name != other.name) return false
-        if (logoImageUrl != other.logoImageUrl) return false
-        if (description != other.description) return false
-        if (encryptedReservationPassword != other.encryptedReservationPassword) return false
-
-        return true
+        return id == other.id
     }
 
     override fun hashCode(): Int {
-        var result = id?.hashCode() ?: 0
-        result = 31 * result + email.hashCode()
-        result = 31 * result + encryptedPassword.hashCode()
-        result = 31 * result + name.hashCode()
-        result = 31 * result + (logoImageUrl?.hashCode() ?: 0)
-        result = 31 * result + (description?.hashCode() ?: 0)
-        result = 31 * result + encryptedReservationPassword.hashCode()
-        return result
+        return id?.hashCode() ?: 0
     }
 
     override fun toString(): String {
@@ -67,5 +55,9 @@ class Organization(
                 "logoImageUrl=$logoImageUrl, " +
                 "description=$description, " +
                 "encryptedReservationPassword='$encryptedReservationPassword')"
+    }
+
+    fun addHashtags(tags: List<Hashtag>) {
+        hashtags.addAll(tags)
     }
 }
