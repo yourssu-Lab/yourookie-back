@@ -10,10 +10,10 @@ class HashtagRepositoryImpl(
 ) : HashtagRepository {
 
     override fun save(hashtag: Hashtag): Hashtag {
-        return jpaHashtagRepository.save(hashtag)
+        return jpaHashtagRepository.save(HashtagEntity.from(hashtag)).toDomain()
     }
 
     override fun findByName(name: String): Hashtag? {
-        return jpaHashtagRepository.findByName(name)
+        return jpaHashtagRepository.findByName(name)?.toDomain()
     }
 }
