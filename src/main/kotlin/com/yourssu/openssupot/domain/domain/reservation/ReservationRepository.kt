@@ -6,9 +6,15 @@ interface ReservationRepository {
 
     fun save(reservation: Reservation): Reservation
 
-    fun existsBySpaceIdAndDateRange(
+    fun existsBySpaceIdAndDateTimeRange(
         spaceId: Long,
         startDateTime: LocalDateTime,
         endDateTime: LocalDateTime
     ): Boolean
+
+    fun findAllBySpaceIdAndDateTimeRange(
+        spaceId: Long,
+        startOfDay: LocalDateTime,
+        endOfDay: LocalDateTime
+    ): List<Reservation>
 }

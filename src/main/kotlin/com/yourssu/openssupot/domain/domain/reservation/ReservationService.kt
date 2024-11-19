@@ -4,6 +4,7 @@ import com.yourssu.openssupot.domain.domain.authentication.PasswordNotMatchExcep
 import com.yourssu.openssupot.domain.domain.space.Space
 import com.yourssu.openssupot.domain.domain.space.SpaceReader
 import com.yourssu.openssupot.domain.support.security.password.PasswordEncoder
+import java.time.LocalDate
 import org.springframework.stereotype.Service
 
 @Service
@@ -34,5 +35,12 @@ class ReservationService(
         val savedReservation: Reservation = reservationWriter.write(reservation)
 
         return savedReservation.id!!
+    }
+
+    fun readAllByDate(spaceId: Long, date: LocalDate): ReadReservationsResult {
+        val space: Space = spaceReader.getById(spaceId)
+        val reservations: List<Reservation> = reservationReader.getAllBySpaceAndDate(space, date)
+
+        return ReadReservationsResult.from(reservations)
     }
 }
