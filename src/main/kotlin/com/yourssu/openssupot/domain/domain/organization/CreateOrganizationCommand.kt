@@ -9,4 +9,5 @@ data class CreateOrganizationCommand(
     val logoImage: MultipartFile? = null,
     val description: String? = null,
     val rawReservationPassword: String,
+    val hashtags: List<String> = emptyList(),
 )

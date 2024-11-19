@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional
 @Transactional
 class OrganizationWriter(
     private val organizationRepository: OrganizationRepository,
+    private val hashtagWriter : HashtagWriter,
 ) {
 
     fun write(
@@ -23,7 +24,11 @@ class OrganizationWriter(
             description = command.description,
             encryptedReservationPassword = encryptedReservationPassword,
         )
+        val savedOrganization: Organization = organizationRepository.save(toSave)
+        val savedHashtags: List<Hashtag> = hashtagWriter.write(savedOrganization.id!!, command.hashtags)
 
-        return organizationRepository.save(toSave)
+        savedOrganization.addHashtags(savedHashtags)
+
+        return savedOrganization
     }
 }
