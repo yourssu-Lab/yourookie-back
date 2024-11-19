@@ -1,5 +1,9 @@
 package com.yourssu.openssupot.domain.domain.reservation
 
+import com.yourssu.openssupot.domain.domain.space.Space
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.LocalTime
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 
@@ -15,5 +19,12 @@ class ReservationReader(
             reservation.getStartDateTime(),
             reservation.getEndDateTime(),
         )
+    }
+
+    fun getAllBySpaceAndDate(space: Space, date: LocalDate): List<Reservation> {
+        val startOfDay: LocalDateTime = date.atStartOfDay()
+        val endOfDay: LocalDateTime = date.atTime(LocalTime.MAX)
+
+        return reservationRepository.findAllBySpaceIdAndDateTimeRange(space.id!!, startOfDay, endOfDay)
     }
 }
