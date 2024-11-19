@@ -1,6 +1,7 @@
 package com.yourssu.openssupot.domain.domain.space
 
 import com.yourssu.openssupot.domain.domain.organization.Organization
+import com.yourssu.openssupot.domain.domain.reservation.ReservationTime
 import java.time.LocalTime
 
 class Space(
@@ -12,6 +13,14 @@ class Space(
     val operatingTime: SpaceOperatingTime,
     val capacity: Capacity,
 ) {
+
+    fun canReserve(reservationTime: ReservationTime): Boolean {
+        return operatingTime.isAvailableTime(reservationTime)
+    }
+
+    fun getEncryptedReservationPassword(): String {
+        return organization.encryptedReservationPassword
+    }
 
     fun getOpeningTime(): LocalTime {
         return operatingTime.openingTime

@@ -2,6 +2,7 @@ package com.yourssu.openssupot.storage.domain.space
 
 import com.yourssu.openssupot.domain.domain.space.Space
 import com.yourssu.openssupot.domain.domain.space.SpaceRepository
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Repository
 
 @Repository
@@ -12,6 +13,10 @@ class SpaceRepositoryImpl(
 
     override fun save(space: Space): Space {
         return jpaSpaceRepository.save(SpaceEntity.from(space)).toDomain()
+    }
+
+    override fun findById(spaceId: Long): Space? {
+        return jpaSpaceRepository.findByIdOrNull(spaceId)?.toDomain()
     }
 
     override fun findAllByOrganizationId(organizationId: Long): List<Space> {
