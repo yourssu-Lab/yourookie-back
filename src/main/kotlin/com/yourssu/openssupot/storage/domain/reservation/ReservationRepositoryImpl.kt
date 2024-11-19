@@ -14,7 +14,7 @@ class ReservationRepositoryImpl(
         return jpaReservationRepository.save(ReservationEntity.from(reservation)).toDomain()
     }
 
-    override fun existsBySpaceIdAndDateRange(
+    override fun existsBySpaceIdAndDateTimeRange(
         spaceId: Long,
         startDateTime: LocalDateTime,
         endDateTime: LocalDateTime

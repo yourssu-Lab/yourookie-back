@@ -10,7 +10,7 @@ class ReservationReader(
 ) {
 
     fun isTimeConflict(reservation: Reservation): Boolean {
-        return reservationRepository.existsBySpaceIdAndDateRange(
+        return reservationRepository.existsBySpaceIdAndDateTimeRange(
             reservation.space.id!!,
             reservation.getStartDateTime(),
             reservation.getEndDateTime(),

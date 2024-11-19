@@ -51,11 +51,14 @@ class ReservationRepositoryImplTest {
     @ParameterizedTest
     @CsvSource(
         "2024-11-20T10:00, 2024-11-20T12:00",
+        "2024-11-20T10:00, 2024-11-20T14:00",
+        "2024-11-20T10:00, 2024-11-20T18:00",
+        "2024-11-20T11:30, 2024-11-20T12:30",
         "2024-11-20T12:00, 2024-11-20T14:00",
         "2024-11-20T14:00, 2024-11-20T16:00",
-        "2024-11-20T14:00, 2024-11-20T16:00",
-        "2024-11-20T16:00, 2024-11-20T18:00"
-
+        "2024-11-20T14:00, 2024-11-20T18:00",
+        "2024-11-20T15:30, 2024-11-20T16:30",
+        "2024-11-20T16:00, 2024-11-20T18:00",
     )
     fun `주어진 공간에 주어진 시간 범위와 겹치는 예약이 존재하면 true를 반환한다`(
         startDateTime: LocalDateTime,
@@ -76,7 +79,7 @@ class ReservationRepositoryImplTest {
         )
 
         // when
-        val result = reservationRepository.existsBySpaceIdAndDateRange(space.id!!, startDateTime, endDateTime)
+        val result = reservationRepository.existsBySpaceIdAndDateTimeRange(space.id!!, startDateTime, endDateTime)
 
         // then
         assertThat(result).isTrue()
@@ -88,7 +91,6 @@ class ReservationRepositoryImplTest {
         "2024-11-20T13:00, 2024-11-20T14:00",
         "2024-11-20T14:00, 2024-11-20T15:00",
         "2024-11-20T17:00, 2024-11-20T18:00",
-
     )
     fun `주어진 공간에 주어진 시간 범위와 겹치는 예약이 존재하지 않으면 false를 반환한다`(
         startDateTime: LocalDateTime,
@@ -109,7 +111,7 @@ class ReservationRepositoryImplTest {
         )
 
         // when
-        val result = reservationRepository.existsBySpaceIdAndDateRange(space.id!!, startDateTime, endDateTime)
+        val result = reservationRepository.existsBySpaceIdAndDateTimeRange(space.id!!, startDateTime, endDateTime)
 
         // then
         assertThat(result).isFalse()
