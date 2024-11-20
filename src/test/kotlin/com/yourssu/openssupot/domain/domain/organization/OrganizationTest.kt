@@ -18,6 +18,7 @@ class OrganizationTest {
                 email = Email("email@email.com"),
                 encryptedPassword = plainPassword,
                 name = OrganizationName("organizationName"),
+                logoImageUrl = "logoImageUrl",
                 encryptedReservationPassword = "\$2a\$10\$SG1qTzy5vDOLYaPQ5ws/aA+K1mG2ekX+IuE8EXk/xhF0RQoNlXsXl"
             )
         }.isInstanceOf(PasswordNotEncryptedException::class.java)
@@ -35,6 +36,7 @@ class OrganizationTest {
                 email = Email("email@email.com"),
                 encryptedPassword = "\$2a\$10\$SG1qTzy5vDOLYaPQ5ws/aA+K1mG2ekX+IuE8EXk/xhF0RQoNlXsXl",
                 name = OrganizationName("organizationName"),
+                logoImageUrl = "logoImageUrl",
                 encryptedReservationPassword = plainPassword
             )
         }.isInstanceOf(PasswordNotEncryptedException::class.java)
@@ -52,6 +54,7 @@ class OrganizationTest {
                 email = Email("email@email.com"),
                 encryptedPassword = encryptPassword,
                 name = OrganizationName("organizationName"),
+                logoImageUrl = "logoImageUrl",
                 encryptedReservationPassword = encryptPassword
             )
         }
