@@ -48,4 +48,10 @@ class SpaceService(
 
         spaceWriter.update(updatedSpace)
     }
+
+    fun readById(spaceId: Long): SpaceDto {
+        val space: Space = spaceReader.getById(spaceId)
+
+        return SpaceDto.from(space)
+    }
 }
