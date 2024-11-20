@@ -3,7 +3,6 @@ package com.yourssu.openssupot.application.domain.space
 import com.yourssu.openssupot.application.support.authentication.AuthenticationOrganization
 import com.yourssu.openssupot.application.support.authentication.AuthenticationOrganizationInfo
 import com.yourssu.openssupot.domain.domain.space.CreateSpaceCommand
-import com.yourssu.openssupot.domain.domain.space.ReadSpaceResponse
 import com.yourssu.openssupot.domain.domain.space.ReadSpacesResult
 import com.yourssu.openssupot.domain.domain.space.SpaceService
 import jakarta.validation.Valid

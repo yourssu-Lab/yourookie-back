@@ -1,5 +1,6 @@
-package com.yourssu.openssupot.domain.domain.space
+package com.yourssu.openssupot.application.domain.space
 
+import com.yourssu.openssupot.domain.domain.space.SpaceDto
 import java.time.LocalTime
 
 data class ReadSpaceResponse(
