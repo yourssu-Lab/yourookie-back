@@ -9,4 +9,6 @@ interface JpaOrganizationHashtagRepository : JpaRepository<OrganizationHashtagEn
     ): OrganizationHashtagEntity?
 
     fun findAllByOrganizationId(organizationId: Long): List<OrganizationHashtagEntity>
+
+    fun deleteAllByOrganizationId(organizationId: Long)
 }

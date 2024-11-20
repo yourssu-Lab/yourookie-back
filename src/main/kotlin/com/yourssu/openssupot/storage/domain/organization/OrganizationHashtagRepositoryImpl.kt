@@ -23,4 +23,8 @@ class OrganizationHashtagRepositoryImpl(
     override fun findAllByOrganizationId(organizationId: Long): List<OrganizationHashtag> {
         return jpaOrganizationHashtagRepository.findAllByOrganizationId(organizationId).map { it.toDomain() }
     }
+
+    override fun deleteAllByOrganizationId(organizationId: Long) {
+        jpaOrganizationHashtagRepository.deleteAllByOrganizationId(organizationId)
+    }
 }

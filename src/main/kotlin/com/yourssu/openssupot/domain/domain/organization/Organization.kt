@@ -23,6 +23,32 @@ class Organization(
         }
     }
 
+    fun updateAndReturnNew(
+        email: Email? = this.email,
+        encryptedPassword: String? = this.encryptedPassword,
+        name: OrganizationName? = this.name,
+        logoImageUrl: String? = this.logoImageUrl,
+        description: String? = null,
+        encryptedReservationPassword: String? = this.encryptedReservationPassword,
+        hashtags: List<Hashtag>? = this.hashtags,
+    ): Organization {
+        return Organization(
+            id = this.id,
+            email = email ?: this.email,
+            encryptedPassword = encryptedPassword ?: this.encryptedPassword,
+            name = name ?: this.name,
+            logoImageUrl = logoImageUrl ?: this.logoImageUrl,
+            description = description,
+            encryptedReservationPassword = encryptedReservationPassword ?: this.encryptedReservationPassword,
+            hashtags = hashtags?.toMutableList() ?: this.hashtags
+        )
+    }
+
+    fun updateHashtags(updatedHashtags: List<Hashtag>) {
+        hashtags.clear()
+        hashtags.addAll(updatedHashtags)
+    }
+
     fun getEmailValue(): String {
         return email.emailAddress
     }

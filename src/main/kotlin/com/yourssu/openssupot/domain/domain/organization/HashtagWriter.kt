@@ -32,4 +32,11 @@ class HashtagWriter(
 
         return savedHashtags
     }
+
+    fun update(organization:Organization, hashtagNames: List<String>): List<Hashtag> {
+        val organizationId: Long = organization.id!!
+        organizationHashtagRepository.deleteAllByOrganizationId(organizationId)
+
+        return write(organizationId, hashtagNames)
+    }
 }
