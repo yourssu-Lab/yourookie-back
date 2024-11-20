@@ -3,6 +3,7 @@ package com.yourssu.openssupot.domain.domain.space
 import com.yourssu.openssupot.domain.domain.file.FileProcessor
 import com.yourssu.openssupot.domain.domain.organization.Organization
 import com.yourssu.openssupot.domain.domain.organization.OrganizationReader
+import com.yourssu.openssupot.domain.domain.organization.UnauthorizedOrganizationException
 import org.springframework.stereotype.Service
 
 @Service
@@ -28,5 +29,23 @@ class SpaceService(
         val spaces: List<Space> = spaceReader.readAllByOrganization(organization)
 
         return ReadSpacesResult.from(organization, spaces)
+    }
+
+    fun update(requestOrganizationId: Long, command: UpdateSpaceOrganizationCommand) {
+        val organization: Organization = organizationReader.getById(requestOrganizationId)
+        val space: Space = spaceReader.getById(command.targetSpaceId)
+        if (organization != space.organization) {
+            throw UnauthorizedOrganizationException("본인의 단체의 공간만 수정할 수 있습니다.")
+        }
+
+        val updatedSpace: Space = space.updateAndReturnNew(
+            name = command.name,
+            location = command.location,
+            spaceImageUrl = command.spaceImage?.let { fileProcessor.upload(it) },
+            operatingTime = SpaceOperatingTime(command.openingTime, command.closingTime),
+            capacity = Capacity(command.capacity),
+        )
+
+        spaceWriter.update(updatedSpace)
     }
 }

@@ -18,7 +18,11 @@ import org.springframework.mock.web.MockMultipartFile
 class LocalFileProcessorTest {
 
     @Autowired
-    private val localFileUploader = LocalFileProcessor()
+    private val localFileUploader = LocalFileProcessor(
+        "src/test/resources",
+        "http://localhost:8080",
+        "default.png"
+    )
 
     private val mockFile = mock(MockMultipartFile::class.java)
 

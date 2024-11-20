@@ -9,11 +9,6 @@ class Reservation(
     val bookerName: String,
     val reservationTime: ReservationTime,
 ) {
-    init {
-        if (!space.canReserve(reservationTime)) {
-            throw InvalidReservationException("공간 사용 가능 시간이 아닙니다.")
-        }
-    }
 
     fun getStartDateTime(): LocalDateTime {
         return reservationTime.startDateTime
