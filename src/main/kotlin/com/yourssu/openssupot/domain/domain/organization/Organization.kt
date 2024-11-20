@@ -7,7 +7,7 @@ class Organization(
     val email: Email,
     val encryptedPassword: String,
     val name: OrganizationName,
-    val logoImageUrl: String? = null,
+    val logoImageUrl: String,
     val description: String? = null,
     val encryptedReservationPassword: String,
     val hashtags: MutableList<Hashtag> = mutableListOf(),

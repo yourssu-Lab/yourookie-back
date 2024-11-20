@@ -12,7 +12,7 @@ class OrganizationWriter(
 
     fun write(
         command: CreateOrganizationCommand,
-        logoImageUrl: String?,
+        logoImageUrl: String,
         encryptedPassword: String,
         encryptedReservationPassword: String,
     ): Organization {

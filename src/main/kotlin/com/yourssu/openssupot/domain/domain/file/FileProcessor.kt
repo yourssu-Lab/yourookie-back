@@ -7,4 +7,5 @@ interface FileProcessor {
     fun upload(multipartFile: MultipartFile) : String
     fun uploadAll(multipartFiles: List<MultipartFile>) : List<String>
     fun getFileStorePath(storeName: String) : String
+    fun getDefaultOrganizationImageUrl(): String
 }

@@ -6,7 +6,7 @@ data class ReadOrganizationResponse(
 
     val id: Long,
     val name: String,
-    val logoImageUrl: String?,
+    val logoImageUrl: String,
     val description: String?,
     val hashtags: List<String> = emptyList(),
 ) {

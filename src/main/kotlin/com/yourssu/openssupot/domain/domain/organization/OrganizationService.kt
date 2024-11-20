@@ -20,7 +20,11 @@ class OrganizationService (
         }
         val encryptedPassword: String = passwordEncoder.encode(command.rawPassword)
         val encryptedReservationPassword: String = passwordEncoder.encode(command.rawReservationPassword)
-        val logoImageUrl: String? = command.logoImage?.let { fileProcessor.upload(it) }
+
+        var logoImageUrl: String = fileProcessor.getDefaultOrganizationImageUrl()
+        if (command.logoImage != null) {
+            logoImageUrl = fileProcessor.upload(command.logoImage)
+        }
 
         val savedOrganization = organizationWriter.write(
             command,

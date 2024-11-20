@@ -15,6 +15,10 @@ class LocalFileProcessor(
 
     @Value("\${file.web.path}")
     val webApiPath: String,
+
+    @Value("\${file.default-imag-name.organization}")
+    val defaultOrganizationImageName: String,
+
 ) : FileProcessor {
 
     companion object {
@@ -64,4 +68,6 @@ class LocalFileProcessor(
     }
 
     override fun getFileStorePath(storeName: String): String = uploadPath + storeName
+
+    override fun getDefaultOrganizationImageUrl(): String = webApiPath + defaultOrganizationImageName
 }
