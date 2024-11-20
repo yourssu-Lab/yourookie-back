@@ -22,10 +22,15 @@ class ReservationService(
             throw PasswordNotMatchException("예약 비밀번호가 일치하지 않습니다.")
         }
 
+        val reservationTime = ReservationTime(command.startDateTime, command.endDateTime)
+        if (!space.canReserve(reservationTime)) {
+            throw InvalidReservationException("공간 사용 가능 시간이 아닙니다.")
+        }
+
         val reservation = Reservation(
             space = space,
             bookerName = command.bookerName,
-            reservationTime = ReservationTime(command.startDateTime, command.endDateTime),
+            reservationTime = reservationTime,
         )
 
         if (reservationReader.isTimeConflict(reservation)) {
