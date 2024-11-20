@@ -18,6 +18,24 @@ class Space(
         return operatingTime.isAvailableTime(reservationTime)
     }
 
+    fun updateAndReturnNew(
+        name: String? = this.name,
+        location: String? = this.location,
+        spaceImageUrl: String? = this.spaceImageUrl,
+        operatingTime: SpaceOperatingTime? = this.operatingTime,
+        capacity: Capacity? = this.capacity,
+    ): Space {
+        return Space(
+            id = this.id,
+            organization = organization,
+            name = name ?: this.name,
+            location = location ?: this.location,
+            spaceImageUrl = spaceImageUrl ?: this.spaceImageUrl,
+            operatingTime = operatingTime ?: this.operatingTime,
+            capacity = capacity ?: this.capacity
+        )
+    }
+
     fun getEncryptedReservationPassword(): String {
         return organization.encryptedReservationPassword
     }
