@@ -26,4 +26,6 @@ class SpaceWriter(
 
         return spaceRepository.save(toSave)
     }
+
+    fun update(updatedSpace: Space) = spaceRepository.save(updatedSpace)
 }
