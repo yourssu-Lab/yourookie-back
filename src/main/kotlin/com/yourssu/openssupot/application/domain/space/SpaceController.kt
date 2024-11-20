@@ -59,5 +59,4 @@ class SpaceController(
 
         return ResponseEntity.ok().build()
     }
-    )
 }
