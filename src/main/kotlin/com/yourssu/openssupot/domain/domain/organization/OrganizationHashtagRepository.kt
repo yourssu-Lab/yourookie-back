@@ -10,4 +10,6 @@ interface OrganizationHashtagRepository {
     ): OrganizationHashtag?
 
     fun findAllByOrganizationId(organizationId: Long): List<OrganizationHashtag>
+
+    fun deleteAllByOrganizationId(organizationId: Long)
 }

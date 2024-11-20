@@ -31,4 +31,13 @@ class OrganizationWriter(
 
         return savedOrganization
     }
+
+    fun update(toUpdate: Organization, hashtags: List<String>): Organization {
+        val updatedOrganization: Organization = organizationRepository.save(toUpdate)
+        val updatedHashtags: List<Hashtag> = hashtagWriter.update(updatedOrganization, hashtags)
+
+        updatedOrganization.updateHashtags(updatedHashtags)
+
+        return updatedOrganization
+    }
 }
