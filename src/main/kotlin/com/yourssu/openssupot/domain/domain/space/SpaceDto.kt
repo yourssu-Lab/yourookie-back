@@ -5,7 +5,7 @@ import java.time.LocalTime
 
 data class SpaceDto(
 
-    val id: Long? = null,
+    val id: Long,
     val organization: OrganizationDto,
     val name: String,
     val location: String,

@@ -35,6 +35,16 @@ class SpaceController(
         return ResponseEntity.created(URI.create("/spaces/$spaceId")).build()
     }
 
+    @GetMapping("/spaces/{spaceId}")
+    fun readById(
+        @PathVariable spaceId: Long,
+    ): ResponseEntity<ReadSpaceResponse> {
+        val space = spaceService.readById(spaceId)
+        val response = ReadSpaceResponse.from(space)
+
+        return ResponseEntity.ok(response)
+    }
+
     @GetMapping("/spaces")
     fun readAllByOrganizationId(
         @RequestParam organizationId: Long,
