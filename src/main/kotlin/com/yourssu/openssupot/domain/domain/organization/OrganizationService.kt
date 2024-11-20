@@ -35,6 +35,12 @@ class OrganizationService (
         return savedOrganization.id!!
     }
 
+    fun readById(organizationId: Long): OrganizationDto {
+        val organization: Organization = organizationReader.getById(organizationId)
+
+        return OrganizationDto.from(organization)
+    }
+
     fun checkIsUnique(email: String): Boolean {
         return !organizationReader.existByEmail(email)
     }
