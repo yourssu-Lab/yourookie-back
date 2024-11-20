@@ -9,6 +9,8 @@ import jakarta.validation.Valid
 import java.net.URI
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PatchMapping
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RequestPart
@@ -42,4 +44,20 @@ class SpaceController(
 
         return ResponseEntity.ok(response)
     }
+
+    @PatchMapping("/spaces/{spaceId}")
+    fun update(
+        @AuthenticationOrganization authInfo: AuthenticationOrganizationInfo,
+        @PathVariable spaceId: Long,
+        @RequestPart(required = false) image: MultipartFile?,
+        @RequestPart @Valid request: UpdateSpaceRequest,
+    ): ResponseEntity<Unit> {
+        spaceService.update(
+            authInfo.organizationId,
+            request.toCommand(spaceId, image)
+        )
+
+        return ResponseEntity.ok().build()
+    }
+    )
 }

@@ -12,9 +12,10 @@ data class UpdateOrganizationRequest(
     val reservationPassword: String? = null,
     val hashtags: List<String> = emptyList(),
 ) {
-    fun toCommand(targetOrganizationId: Long, logoImage: MultipartFile?): UpdateOrganizationCommand {
-        println("request hashtags = ${hashtags}")
-        return UpdateOrganizationCommand(
+    fun toCommand(
+        targetOrganizationId: Long,
+        logoImage: MultipartFile?
+    ): UpdateOrganizationCommand = UpdateOrganizationCommand(
             targetOrganizationId = targetOrganizationId,
             name = name,
             logoImage = logoImage,
@@ -22,5 +23,4 @@ data class UpdateOrganizationRequest(
             rawReservationPassword = reservationPassword,
             hashtags = hashtags
         )
-    }
 }
