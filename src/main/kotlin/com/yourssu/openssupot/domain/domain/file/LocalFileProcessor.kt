@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component
 import org.springframework.web.multipart.MultipartFile
 
 @Component
-class LocalFileUploader : FileUploader {
+class LocalFileProcessor : FileProcessor {
 
     @Value("\${file.upload.path}")
     lateinit var uploadPath: String

@@ -1,12 +1,12 @@
 package com.yourssu.openssupot.domain.domain.organization
 
-import com.yourssu.openssupot.domain.domain.file.FileUploader
+import com.yourssu.openssupot.domain.domain.file.FileProcessor
 import com.yourssu.openssupot.domain.support.security.password.PasswordEncoder
 import org.springframework.stereotype.Service
 
 @Service
 class OrganizationService (
-    private val fileUploader: FileUploader,
+    private val fileProcessor: FileProcessor,
     private val passwordEncoder: PasswordEncoder,
     private val organizationWriter: OrganizationWriter,
     private val organizationReader: OrganizationReader,
@@ -20,7 +20,7 @@ class OrganizationService (
         }
         val encryptedPassword: String = passwordEncoder.encode(command.rawPassword)
         val encryptedReservationPassword: String = passwordEncoder.encode(command.rawReservationPassword)
-        val logoImageUrl: String? = command.logoImage?.let { fileUploader.upload(it) }
+        val logoImageUrl: String? = command.logoImage?.let { fileProcessor.upload(it) }
 
         val savedOrganization = organizationWriter.write(
             command,
