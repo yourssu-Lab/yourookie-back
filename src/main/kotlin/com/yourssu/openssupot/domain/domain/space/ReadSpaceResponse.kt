@@ -7,21 +7,26 @@ data class ReadSpaceResponse(
     val id: Long,
     val name: String,
     val location: String,
-    val spaceImageUrl: String?,
+    val spaceImageUrl: String,
     val openingTime: LocalTime,
     val closingTime: LocalTime,
     val capacity: Int,
 ) {
 
     companion object {
-        fun from(spaceDto: SpaceDto) = ReadSpaceResponse(
-            id = spaceDto.id!!,
-            name = spaceDto.name,
-            location = spaceDto.location,
-            spaceImageUrl = spaceDto.spaceImageUrl,
-            openingTime = spaceDto.openingTime,
-            closingTime = spaceDto.closingTime,
-            capacity = spaceDto.capacity,
-        )
+        fun from(spaceDto: SpaceDto) : ReadSpaceResponse {
+            val spaceImageUrl: String = spaceDto.spaceImageUrl
+                ?: spaceDto.organization.logoImageUrl
+
+            return ReadSpaceResponse(
+                id = spaceDto.id!!,
+                name = spaceDto.name,
+                location = spaceDto.location,
+                spaceImageUrl = spaceImageUrl,
+                openingTime = spaceDto.openingTime,
+                closingTime = spaceDto.closingTime,
+                capacity = spaceDto.capacity,
+            )
+        }
     }
 }

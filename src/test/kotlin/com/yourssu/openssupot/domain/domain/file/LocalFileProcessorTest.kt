@@ -15,10 +15,10 @@ import org.springframework.mock.web.MockMultipartFile
 
 @Suppress("NonAsciiCharacters")
 @SpringBootTest
-class LocalFileUploaderTest {
+class LocalFileProcessorTest {
 
     @Autowired
-    private val localFileUploader = LocalFileUploader()
+    private val localFileUploader = LocalFileProcessor()
 
     private val mockFile = mock(MockMultipartFile::class.java)
 

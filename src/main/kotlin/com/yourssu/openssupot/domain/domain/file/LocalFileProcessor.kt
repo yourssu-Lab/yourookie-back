@@ -8,13 +8,18 @@ import org.springframework.stereotype.Component
 import org.springframework.web.multipart.MultipartFile
 
 @Component
-class LocalFileUploader : FileUploader {
+class LocalFileProcessor(
 
     @Value("\${file.upload.path}")
-    lateinit var uploadPath: String
+    val uploadPath: String,
 
     @Value("\${file.web.path}")
-    lateinit var webApiPath: String
+    val webApiPath: String,
+
+    @Value("\${file.default-imag-name.organization}")
+    val defaultOrganizationImageName: String,
+
+) : FileProcessor {
 
     companion object {
         private val EXTENSION = listOf("jpg", "jpeg", "png")
@@ -61,4 +66,8 @@ class LocalFileUploader : FileUploader {
 
         return extension
     }
+
+    override fun getFileStorePath(storeName: String): String = uploadPath + storeName
+
+    override fun getDefaultOrganizationImageUrl(): String = webApiPath + defaultOrganizationImageName
 }

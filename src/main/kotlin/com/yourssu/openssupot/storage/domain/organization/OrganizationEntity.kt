@@ -27,8 +27,8 @@ class OrganizationEntity(
     @Column(nullable = false)
     val name: String,
 
-    @Column
-    val logoImageUrl: String? = null,
+    @Column(nullable = false)
+    val logoImageUrl: String,
 
     @Column
     val description: String? = null,
