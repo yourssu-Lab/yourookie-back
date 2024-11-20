@@ -3,7 +3,6 @@ package com.yourssu.openssupot.application.domain.space
 import com.yourssu.openssupot.application.support.authentication.AuthenticationOrganization
 import com.yourssu.openssupot.application.support.authentication.AuthenticationOrganizationInfo
 import com.yourssu.openssupot.domain.domain.space.CreateSpaceCommand
-import com.yourssu.openssupot.domain.domain.space.ReadSpaceResponse
 import com.yourssu.openssupot.domain.domain.space.ReadSpacesResult
 import com.yourssu.openssupot.domain.domain.space.SpaceService
 import jakarta.validation.Valid
@@ -37,9 +36,9 @@ class SpaceController(
     @GetMapping("/spaces")
     fun readAllByOrganizationId(
         @RequestParam organizationId: Long,
-    ): ResponseEntity<List<ReadSpaceResponse>> {
+    ): ResponseEntity<ReadSpacesResponse> {
         val spaces: ReadSpacesResult = spaceService.readAllByOrganizationId(organizationId)
-        val response: List<ReadSpaceResponse> = spaces.spaceDtos.map { ReadSpaceResponse.from(it) }
+        val response: ReadSpacesResponse = ReadSpacesResponse.from(spaces)
 
         return ResponseEntity.ok(response)
     }

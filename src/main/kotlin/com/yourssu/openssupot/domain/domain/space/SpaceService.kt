@@ -27,6 +27,6 @@ class SpaceService(
         val organization: Organization = organizationReader.getById(organizationId)
         val spaces: List<Space> = spaceReader.readAllByOrganization(organization)
 
-        return ReadSpacesResult.from(spaces)
+        return ReadSpacesResult.from(organization, spaces)
     }
 }
