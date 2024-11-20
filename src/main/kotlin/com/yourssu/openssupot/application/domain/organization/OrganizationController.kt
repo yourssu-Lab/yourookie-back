@@ -42,6 +42,15 @@ class OrganizationController(
         return ResponseEntity.status(HttpStatus.OK).body(response)
     }
 
+    @GetMapping("/organizations/{organizationId}")
+    fun readById(
+        @PathVariable organizationId: Long,
+    ): ResponseEntity<ReadOrganizationResponse> {
+        val organizationDto = organizationService.readById(organizationId)
+
+        return ResponseEntity.status(HttpStatus.OK).body(ReadOrganizationResponse.from(organizationDto))
+    }
+
     @GetMapping("/organizations")
     fun readByName(
         @RequestParam name: String,
