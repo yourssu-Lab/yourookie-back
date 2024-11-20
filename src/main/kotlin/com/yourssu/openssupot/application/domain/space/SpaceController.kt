@@ -36,9 +36,9 @@ class SpaceController(
     @GetMapping("/spaces")
     fun readAllByOrganizationId(
         @RequestParam organizationId: Long,
-    ): ResponseEntity<List<ReadSpaceResponse>> {
+    ): ResponseEntity<ReadSpacesResponse> {
         val spaces: ReadSpacesResult = spaceService.readAllByOrganizationId(organizationId)
-        val response: List<ReadSpaceResponse> = spaces.spaceDtos.map { ReadSpaceResponse.from(it) }
+        val response: ReadSpacesResponse = ReadSpacesResponse.from(spaces)
 
         return ResponseEntity.ok(response)
     }
