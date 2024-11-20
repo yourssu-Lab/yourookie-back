@@ -13,6 +13,7 @@ import com.yourssu.openssupot.domain.domain.organization.InvalidOrganizationName
 import com.yourssu.openssupot.domain.domain.organization.InvalidPasswordException
 import com.yourssu.openssupot.domain.domain.organization.OrganizationNotFoundException
 import com.yourssu.openssupot.domain.domain.organization.PasswordNotEncryptedException
+import com.yourssu.openssupot.domain.domain.organization.UnauthorizedOrganizationException
 import com.yourssu.openssupot.domain.domain.reservation.InvalidReservationException
 import com.yourssu.openssupot.domain.domain.reservation.InvalidReservationTimeException
 import com.yourssu.openssupot.domain.domain.reservation.ReservationConflictException
@@ -106,6 +107,12 @@ class GlobalExceptionHandler {
     @ExceptionHandler(PasswordNotEncryptedException::class)
     fun handlePasswordNotEncryptedException(e: PasswordNotEncryptedException): ResponseEntity<ExceptionResponse> {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+            .body(ExceptionResponse(e.message))
+    }
+
+    @ExceptionHandler(UnauthorizedOrganizationException::class)
+    fun handleUnauthorizedOrganizationException(e: UnauthorizedOrganizationException): ResponseEntity<ExceptionResponse> {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
             .body(ExceptionResponse(e.message))
     }
 

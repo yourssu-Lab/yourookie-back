@@ -44,4 +44,20 @@ class OrganizationService (
 
         return ReadOrganizationsResult.from(organizations)
     }
+
+    fun update(requestOrganizationId: Long, command: UpdateOrganizationCommand) {
+        if (requestOrganizationId != command.targetOrganizationId) {
+            throw UnauthorizedOrganizationException("본인의 단체 정보만 수정할 수 있습니다.")
+        }
+        val organization: Organization = organizationReader.getById(command.targetOrganizationId)
+
+        val toUpdate: Organization = organization.updateAndReturnNew(
+            name = OrganizationName(command.name),
+            logoImageUrl = command.logoImage?.let { fileProcessor.upload(it) },
+            description = command.description,
+            encryptedReservationPassword = command.rawReservationPassword?.let { passwordEncoder.encode(it) },
+        )
+
+        organizationWriter.update(toUpdate, command.hashtags)
+    }
 }
