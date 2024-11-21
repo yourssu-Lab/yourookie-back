@@ -38,4 +38,20 @@ class PasswordValidatorTest {
         // when & then
         assertDoesNotThrow { PasswordValidator.validate(PasswordFormat.ORGANIZATION_PASSWORD, validPassword) }
     }
+
+    @ParameterizedTest
+    @ValueSource(strings = ["123", "aaa", "1a1"])
+    fun `유효하지 않은 예약자 비밀번호 형식이 입력되면 예외가 발생한다`(invalidPassword: String) {
+        // when & then
+        assertThatThrownBy { PasswordValidator.validate(PasswordFormat.PERSONAL_RESERVATION_PASSWORD, invalidPassword) }
+            .isInstanceOf(InvalidPasswordException::class.java)
+            .hasMessage(PasswordFormat.PERSONAL_RESERVATION_PASSWORD.errorMessage)
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = ["1234", "aaaa", "11aa"])
+    fun `유효한 예약자 비밀번호 형식이라면 예외가 발생하지 않는다`(validPassword: String) {
+        // when & then
+        assertDoesNotThrow { PasswordValidator.validate(PasswordFormat.PERSONAL_RESERVATION_PASSWORD, validPassword) }
+    }
 }

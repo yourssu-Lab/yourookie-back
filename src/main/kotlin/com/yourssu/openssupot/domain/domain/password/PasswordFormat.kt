@@ -8,7 +8,7 @@ enum class PasswordFormat(val regex: String, val errorMessage: String) {
     ),
 
     PERSONAL_RESERVATION_PASSWORD(
-        "^(?=(.*[a-zA-Z]))(?=(.*\\d))[a-zA-Z\\d!@#\$%^&*()_+=-]{4,}\$",
-        "비밀번호는 영어+숫자 4글자 이상이어야 합니다."
+        "^.{4,}\$",
+        "비밀번호는 대소문자, 숫자 무관 4글자 이상이어야 합니다."
     )
 }
