@@ -54,4 +54,13 @@ class ReservationService(
 
         return ReadReservationsResult.from(reservations)
     }
+
+    fun delete(reservationId: Long, personalPassword: String) {
+        val reservation: Reservation = reservationReader.getById(reservationId)
+        if (!passwordEncoder.matches(personalPassword, reservation.encryptedPersonalPassword)) {
+            throw PasswordNotMatchException("예약 시 사용한 비밀번호와 일치하지 않습니다.")
+        }
+
+        reservationWriter.delete(reservation)
+    }
 }
