@@ -1,0 +1,17 @@
+package com.yourssu.openssupot.storage.domain.authentication
+
+import com.yourssu.openssupot.domain.domain.authentication.BlacklistToken
+import com.yourssu.openssupot.domain.domain.authentication.BlacklistTokenRepository
+import org.springframework.stereotype.Repository
+
+@Repository
+class BlacklistTokenRepositoryImpl(
+    private val jpaBlacklistTokenRepository: JpaBlacklistTokenRepository,
+) : BlacklistTokenRepository {
+
+    override fun saveAll(blacklistTokens: List<BlacklistToken>): List<BlacklistToken> {
+        return jpaBlacklistTokenRepository.saveAll(
+            blacklistTokens.map { BlacklistTokenEntity.from(it) }
+        ).map { it.toDomain() }
+    }
+}
