@@ -1,10 +1,10 @@
 package com.yourssu.openssupot.application.domain.reservation
 
-import com.yourssu.openssupot.domain.domain.reservation.ReadReservationsResult
 import com.yourssu.openssupot.domain.domain.reservation.ReservationService
 import jakarta.validation.Valid
 import java.net.URI
 import java.time.LocalDate
+import java.time.LocalDateTime
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -30,11 +30,17 @@ class ReservationController(
     }
 
     @GetMapping("/spaces/{spaceId}/reservations")
-    fun readAllByDate(
+    fun readAll(
         @PathVariable spaceId: Long,
-        @RequestParam date: LocalDate,
+        @RequestParam(required = false) date: LocalDate?,
+        @RequestParam(required = false) time: LocalDateTime?
     ): ResponseEntity<List<ReadReservationResponse>> {
-        val result: ReadReservationsResult = reservationService.readAllByDate(spaceId, date)
+        val result = when {
+            date != null -> reservationService.readAllByDate(spaceId, date)
+            time != null -> reservationService.readAllAfterTime(spaceId, time)
+            else -> throw IllegalArgumentException("Either date or time must be provided")
+        }
+
         val response: List<ReadReservationResponse> = result.reservationDtos.map { ReadReservationResponse.from(it) }
 
         return ResponseEntity.ok(response)
