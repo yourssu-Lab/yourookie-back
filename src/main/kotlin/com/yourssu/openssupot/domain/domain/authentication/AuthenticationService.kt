@@ -62,15 +62,24 @@ class AuthenticationService(
         blacklistTokenWriter.write(blacklistTokens)
     }
 
-    private fun isValidToken(tokenType: TokenType, targetToken: String): Boolean {
-        if (targetToken.isBlank()) {
-            return false
-        }
+    fun isValidToken(tokenType: TokenType, targetToken: String): Boolean {
+        val claims: Claims = tokenDecoder.decode(tokenType, targetToken)
+            ?: throw InvalidTokenException("유효하지 않은 토큰입니다.")
+        val organizationId = PrivateClaims.from(claims).organizationId
 
-        return tokenDecoder.decode(tokenType, targetToken) != null
+        return !isBlacklisted(organizationId, targetToken)
     }
 
     fun isBlacklisted(organizationId: Long, targetToken: String): Boolean {
         return blacklistTokenReader.existsByOrganizationIdAndTargetToken(organizationId, targetToken)
+    }
+
+    fun refreshToken(requestTime: LocalDateTime, refreshToken: String): TokenDto {
+        val claims: Claims = tokenDecoder.decode(TokenType.REFRESH, refreshToken)
+            ?: throw InvalidTokenException("유효한 토큰이 아닙니다.")
+
+        val privateClaims = PrivateClaims.from(claims)
+
+        return generateTokens(requestTime, privateClaims)
     }
 }
