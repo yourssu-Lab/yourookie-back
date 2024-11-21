@@ -1,6 +1,8 @@
 package com.yourssu.openssupot.domain.domain.reservation
 
+import com.yourssu.openssupot.domain.domain.organization.PasswordNotEncryptedException
 import com.yourssu.openssupot.domain.domain.space.Space
+import com.yourssu.openssupot.domain.support.security.password.EncryptPasswordValidator
 import java.time.LocalDateTime
 
 class Reservation(
@@ -8,7 +10,14 @@ class Reservation(
     val space: Space,
     val bookerName: String,
     val reservationTime: ReservationTime,
+    val encryptedPersonalPassword: String,
 ) {
+
+    init {
+        if (EncryptPasswordValidator.isNotEncrypted(encryptedPersonalPassword)) {
+            throw PasswordNotEncryptedException("예약 취소에 사용할 비밀번호가 암호화되지 않았습니다.")
+        }
+    }
 
     fun getStartDateTime(): LocalDateTime {
         return reservationTime.startDateTime

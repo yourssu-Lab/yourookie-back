@@ -35,6 +35,9 @@ class ReservationEntity(
 
     @Column(nullable = false)
     val endDateTime: LocalDateTime,
+
+    @Column(nullable = false)
+    val encryptedPersonalPassword: String,
 ) {
 
     companion object {
@@ -44,6 +47,7 @@ class ReservationEntity(
             bookerName = reservation.bookerName,
             startDateTime = reservation.getStartDateTime(),
             endDateTime = reservation.getEndDateTime(),
+            encryptedPersonalPassword = reservation.encryptedPersonalPassword,
         )
     }
 
@@ -52,5 +56,6 @@ class ReservationEntity(
         space = space.toDomain(),
         bookerName = bookerName,
         reservationTime = ReservationTime(startDateTime, endDateTime),
+        encryptedPersonalPassword = encryptedPersonalPassword,
     )
 }
