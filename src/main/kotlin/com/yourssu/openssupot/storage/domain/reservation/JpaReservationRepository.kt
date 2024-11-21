@@ -31,4 +31,7 @@ interface JpaReservationRepository : JpaRepository<ReservationEntity, Long> {
         startOfDay: LocalDateTime,
         endOfDay: LocalDateTime
     ): List<ReservationEntity>
+
+    fun findAllBySpaceIdAndStartDateTimeAfterOrderByStartDateTimeAsc(spaceId: Long, time: LocalDateTime)
+    : List<ReservationEntity>
 }

@@ -20,5 +20,7 @@ interface ReservationRepository {
         endOfDay: LocalDateTime
     ): List<Reservation>
 
+    fun findAllBySpaceIdAndTimeAfter(spaceId: Long, time: LocalDateTime): List<Reservation>
+
     fun delete(reservation: Reservation)
 }
