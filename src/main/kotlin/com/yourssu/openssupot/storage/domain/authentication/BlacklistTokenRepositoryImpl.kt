@@ -14,4 +14,8 @@ class BlacklistTokenRepositoryImpl(
             blacklistTokens.map { BlacklistTokenEntity.from(it) }
         ).map { it.toDomain() }
     }
+
+    override fun existsByOrganizationIdAndToken(organizationId: Long, targetToken: String): Boolean {
+        return jpaBlacklistTokenRepository.existsByOrganizationIdAndToken(organizationId, targetToken)
+    }
 }

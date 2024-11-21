@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service
 class AuthenticationService(
     private val organizationReader: OrganizationReader,
     private val blacklistTokenWriter: BlacklistTokenWriter,
+    private val blacklistTokenReader: BlacklistTokenReader,
     private val passwordEncoder: PasswordEncoder,
     private val tokenEncoder: TokenEncoder,
     private val tokenDecoder: TokenDecoder,
@@ -67,5 +68,9 @@ class AuthenticationService(
         }
 
         return tokenDecoder.decode(tokenType, targetToken) != null
+    }
+
+    fun isBlacklisted(organizationId: Long, targetToken: String): Boolean {
+        return blacklistTokenReader.existsByOrganizationIdAndTargetToken(organizationId, targetToken)
     }
 }
