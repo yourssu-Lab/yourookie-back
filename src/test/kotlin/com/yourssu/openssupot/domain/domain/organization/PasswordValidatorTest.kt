@@ -1,5 +1,7 @@
 package com.yourssu.openssupot.domain.domain.organization
 
+import com.yourssu.openssupot.domain.domain.password.InvalidPasswordException
+import com.yourssu.openssupot.domain.domain.password.PasswordValidator
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.params.ParameterizedTest

@@ -11,9 +11,9 @@ import com.yourssu.openssupot.domain.domain.file.UnsupportedFileExtensionExcepti
 import com.yourssu.openssupot.domain.domain.organization.DuplicateEmailException
 import com.yourssu.openssupot.domain.domain.organization.InvalidEmailException
 import com.yourssu.openssupot.domain.domain.organization.InvalidOrganizationNameException
-import com.yourssu.openssupot.domain.domain.organization.InvalidPasswordException
+import com.yourssu.openssupot.domain.domain.password.InvalidPasswordException
 import com.yourssu.openssupot.domain.domain.organization.OrganizationNotFoundException
-import com.yourssu.openssupot.domain.domain.organization.PasswordNotEncryptedException
+import com.yourssu.openssupot.domain.domain.password.PasswordNotEncryptedException
 import com.yourssu.openssupot.domain.domain.organization.UnauthorizedOrganizationException
 import com.yourssu.openssupot.domain.domain.reservation.InvalidReservationException
 import com.yourssu.openssupot.domain.domain.reservation.InvalidReservationTimeException

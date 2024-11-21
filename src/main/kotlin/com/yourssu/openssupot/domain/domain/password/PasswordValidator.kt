@@ -1,4 +1,4 @@
-package com.yourssu.openssupot.domain.domain.organization
+package com.yourssu.openssupot.domain.domain.password
 
 import java.util.regex.Matcher
 import java.util.regex.Pattern

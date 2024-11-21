@@ -1,7 +1,7 @@
 package com.yourssu.openssupot.domain.domain.reservation
 
 import com.yourssu.openssupot.domain.domain.authentication.PasswordNotMatchException
-import com.yourssu.openssupot.domain.domain.organization.PasswordValidator
+import com.yourssu.openssupot.domain.domain.password.PasswordValidator
 import com.yourssu.openssupot.domain.domain.space.Space
 import com.yourssu.openssupot.domain.domain.space.SpaceReader
 import com.yourssu.openssupot.domain.support.security.password.PasswordEncoder

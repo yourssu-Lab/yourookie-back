@@ -1,6 +1,6 @@
 package com.yourssu.openssupot.domain.domain.reservation
 
-import com.yourssu.openssupot.domain.domain.organization.PasswordNotEncryptedException
+import com.yourssu.openssupot.domain.domain.password.PasswordNotEncryptedException
 import com.yourssu.openssupot.domain.domain.space.Space
 import com.yourssu.openssupot.domain.support.security.password.EncryptPasswordValidator
 import java.time.LocalDateTime
