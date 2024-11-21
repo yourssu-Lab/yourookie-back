@@ -205,6 +205,7 @@ class ReservationRepositoryImplTest {
                 space = space,
                 bookerName = "booker",
                 reservationTime = ReservationTime(startDateTime, endDateTime),
+                encryptedPersonalPassword = "\$2a\$10\$SG1qTzy5vDOLYaPQ5ws/aA+K1mG2ekX+IuE8EXk/xhF0RQoNlXsXl",
             )
         )
 }

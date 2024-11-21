@@ -1,4 +1,4 @@
-package com.yourssu.openssupot.domain.domain.organization
+package com.yourssu.openssupot.domain.domain.password
 
 class InvalidPasswordException(
     override val message: String

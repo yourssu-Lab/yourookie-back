@@ -1,5 +1,6 @@
 package com.yourssu.openssupot.domain.domain.organization
 
+import com.yourssu.openssupot.domain.domain.password.PasswordNotEncryptedException
 import com.yourssu.openssupot.domain.support.security.password.EncryptPasswordValidator
 
 class Organization(
