@@ -12,4 +12,8 @@ class ReservationWriter(
     fun write(reservation: Reservation): Reservation {
         return reservationRepository.save(reservation)
     }
+
+    fun delete(reservation: Reservation) {
+        reservationRepository.delete(reservation)
+    }
 }

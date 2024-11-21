@@ -18,6 +18,7 @@ import com.yourssu.openssupot.domain.domain.organization.UnauthorizedOrganizatio
 import com.yourssu.openssupot.domain.domain.reservation.InvalidReservationException
 import com.yourssu.openssupot.domain.domain.reservation.InvalidReservationTimeException
 import com.yourssu.openssupot.domain.domain.reservation.ReservationConflictException
+import com.yourssu.openssupot.domain.domain.reservation.ReservationNotFoundException
 import com.yourssu.openssupot.domain.domain.space.InvalidCapacityException
 import com.yourssu.openssupot.domain.domain.space.SpaceNotFoundException
 import com.yourssu.openssupot.domain.support.security.password.PasswordEncodingFailureException
@@ -138,6 +139,12 @@ class GlobalExceptionHandler {
     @ExceptionHandler(ReservationConflictException::class)
     fun handleReservationConflictException(e: ReservationConflictException): ResponseEntity<ExceptionResponse> {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+            .body(ExceptionResponse(e.message))
+    }
+
+    @ExceptionHandler(ReservationNotFoundException::class)
+    fun handleReservationNotFoundException(e: ReservationNotFoundException): ResponseEntity<ExceptionResponse> {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
             .body(ExceptionResponse(e.message))
     }
 
