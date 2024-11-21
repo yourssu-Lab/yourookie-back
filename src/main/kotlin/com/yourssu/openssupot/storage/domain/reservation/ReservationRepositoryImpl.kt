@@ -36,6 +36,11 @@ class ReservationRepositoryImpl(
             .map { it.toDomain() }
     }
 
+    override fun findAllBySpaceIdAndTimeAfter(spaceId: Long, time: LocalDateTime): List<Reservation> {
+        return jpaReservationRepository.findAllBySpaceIdAndStartDateTimeAfterOrderByStartDateTimeAsc(spaceId, time)
+            .map { it.toDomain() }
+    }
+
     override fun delete(reservation: Reservation) {
         jpaReservationRepository.deleteById(reservation.id!!)
     }

@@ -59,7 +59,7 @@ data class ReadSpaceItemResponse(
                 ?: spaceDto.organization.logoImageUrl
 
             return ReadSpaceItemResponse(
-                id = spaceDto.id!!,
+                id = spaceDto.id,
                 name = spaceDto.name,
                 location = spaceDto.location,
                 spaceImageUrl = spaceImageUrl,

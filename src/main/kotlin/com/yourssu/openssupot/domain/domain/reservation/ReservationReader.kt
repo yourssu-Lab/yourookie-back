@@ -28,6 +28,10 @@ class ReservationReader(
         return reservationRepository.findAllBySpaceIdAndDateTimeRange(space.id!!, startOfDay, endOfDay)
     }
 
+    fun getAllBySpaceAndTimeAfter(space: Space, time: LocalDateTime): List<Reservation> {
+        return reservationRepository.findAllBySpaceIdAndTimeAfter(space.id!!, time)
+    }
+
     fun getById(reservationId: Long): Reservation {
         return reservationRepository.findById(reservationId)
             ?: throw ReservationNotFoundException("예약을 찾을 수 없습니다.")

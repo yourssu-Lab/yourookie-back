@@ -7,6 +7,7 @@ import com.yourssu.openssupot.domain.domain.space.Space
 import com.yourssu.openssupot.domain.domain.space.SpaceReader
 import com.yourssu.openssupot.domain.support.security.password.PasswordEncoder
 import java.time.LocalDate
+import java.time.LocalDateTime
 import org.springframework.stereotype.Service
 
 @Service
@@ -51,6 +52,13 @@ class ReservationService(
     fun readAllByDate(spaceId: Long, date: LocalDate): ReadReservationsResult {
         val space: Space = spaceReader.getById(spaceId)
         val reservations: List<Reservation> = reservationReader.getAllBySpaceAndDate(space, date)
+
+        return ReadReservationsResult.from(reservations)
+    }
+
+    fun readAllAfterTime(spaceId: Long, time: LocalDateTime): ReadReservationsResult {
+        val space: Space = spaceReader.getById(spaceId)
+        val reservations: List<Reservation> = reservationReader.getAllBySpaceAndTimeAfter(space, time)
 
         return ReadReservationsResult.from(reservations)
     }
