@@ -2,8 +2,10 @@ package com.yourssu.openssupot.application.domain.authentication
 
 import com.yourssu.openssupot.domain.domain.authentication.AuthenticationService
 import com.yourssu.openssupot.domain.domain.authentication.LoginResultDto
+import com.yourssu.openssupot.domain.domain.authentication.TokenDto
 import com.yourssu.openssupot.domain.support.security.token.TokenType
 import jakarta.validation.Valid
+import java.time.LocalDateTime
 import org.springframework.http.HttpHeaders
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
@@ -43,6 +45,17 @@ class AuthenticationController(
     ): ResponseEntity<ValidateTokenResponse> {
         val validated: Boolean = authenticationService.isValidToken(TokenType.ACCESS, accessToken)
         val response = ValidateTokenResponse(validated)
+
+        return ResponseEntity.ok(response)
+    }
+
+    @PostMapping("/token-refresh")
+    fun refreshToken(
+        @RequestBody @Valid request: TokenRefreshRequest,
+    ): ResponseEntity<TokenRefreshResponse> {
+        val requestTime = LocalDateTime.now()
+        val tokenDto: TokenDto = authenticationService.refreshToken(requestTime, request.refreshToken)
+        val response = TokenRefreshResponse.from(tokenDto)
 
         return ResponseEntity.ok(response)
     }

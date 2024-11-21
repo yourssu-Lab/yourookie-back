@@ -73,4 +73,13 @@ class AuthenticationService(
     fun isBlacklisted(organizationId: Long, targetToken: String): Boolean {
         return blacklistTokenReader.existsByOrganizationIdAndTargetToken(organizationId, targetToken)
     }
+
+    fun refreshToken(requestTime: LocalDateTime, refreshToken: String): TokenDto {
+        val claims: Claims = tokenDecoder.decode(TokenType.REFRESH, refreshToken)
+            ?: throw InvalidTokenException("유효한 토큰이 아닙니다.")
+
+        val privateClaims = PrivateClaims.from(claims)
+
+        return generateTokens(requestTime, privateClaims)
+    }
 }
