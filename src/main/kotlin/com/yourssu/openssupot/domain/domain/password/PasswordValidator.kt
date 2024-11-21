@@ -1,4 +1,4 @@
-package com.yourssu.openssupot.domain.domain.organization
+package com.yourssu.openssupot.domain.domain.password
 
 import java.util.regex.Matcher
 import java.util.regex.Pattern
@@ -6,11 +6,10 @@ import java.util.regex.Pattern
 class PasswordValidator {
 
     companion object {
-        private const val PASSWORD_REGEX = "^(?=(.*[a-zA-Z]))(?=(.*\\d))[a-zA-Z\\d!@#\$%^&*()_+=-]{8,}\$"
 
-        fun validate(rawPassword: String) {
+        fun validate(passwordFormat: PasswordFormat, rawPassword: String) {
             validateNotBlank(rawPassword)
-            validatePasswordFormat(rawPassword)
+            validatePasswordFormat(passwordFormat, rawPassword)
         }
 
         private fun validateNotBlank(rawPassword: String) {
@@ -19,11 +18,11 @@ class PasswordValidator {
             }
         }
 
-        private fun validatePasswordFormat(rawPassword: String) {
-            val pattern: Pattern = Pattern.compile(PASSWORD_REGEX)
+        private fun validatePasswordFormat(format: PasswordFormat, rawPassword: String) {
+            val pattern: Pattern = Pattern.compile(format.regex)
             val matcher: Matcher = pattern.matcher(rawPassword)
             if (!matcher.matches()) {
-                throw InvalidPasswordException("비밀번호는 영어+숫자 8글자 이상이어야 합니다.")
+                throw InvalidPasswordException(format.errorMessage)
             }
         }
     }

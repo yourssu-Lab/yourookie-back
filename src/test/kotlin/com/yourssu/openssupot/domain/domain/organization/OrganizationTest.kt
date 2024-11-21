@@ -1,5 +1,6 @@
 package com.yourssu.openssupot.domain.domain.organization
 
+import com.yourssu.openssupot.domain.domain.password.PasswordNotEncryptedException
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.assertDoesNotThrow
 import kotlin.test.Test
