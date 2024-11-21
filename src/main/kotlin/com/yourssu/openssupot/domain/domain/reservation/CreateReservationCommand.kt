@@ -9,4 +9,5 @@ data class CreateReservationCommand(
     val startDateTime: LocalDateTime,
     val endDateTime: LocalDateTime,
     val password: String,
+    val rawPersonalPassword: String,
 )

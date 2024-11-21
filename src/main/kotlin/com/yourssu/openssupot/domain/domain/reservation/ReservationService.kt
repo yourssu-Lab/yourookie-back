@@ -1,6 +1,7 @@
 package com.yourssu.openssupot.domain.domain.reservation
 
 import com.yourssu.openssupot.domain.domain.authentication.PasswordNotMatchException
+import com.yourssu.openssupot.domain.domain.organization.PasswordValidator
 import com.yourssu.openssupot.domain.domain.space.Space
 import com.yourssu.openssupot.domain.domain.space.SpaceReader
 import com.yourssu.openssupot.domain.support.security.password.PasswordEncoder
@@ -27,10 +28,14 @@ class ReservationService(
             throw InvalidReservationException("공간 사용 가능 시간이 아닙니다.")
         }
 
+        PasswordValidator.validatePersonalPassword(command.rawPersonalPassword)
+
+        val encryptedPersonalPassword: String = passwordEncoder.encode(command.rawPersonalPassword)
         val reservation = Reservation(
             space = space,
             bookerName = command.bookerName,
             reservationTime = reservationTime,
+            encryptedPersonalPassword = encryptedPersonalPassword,
         )
 
         if (reservationReader.isTimeConflict(reservation)) {

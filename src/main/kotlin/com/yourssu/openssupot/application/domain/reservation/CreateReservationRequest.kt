@@ -20,6 +20,9 @@ data class CreateReservationRequest(
 
     @NotBlank(message = "예약 비밀번호가 입력되지 않았습니다.")
     val password: String,
+
+    @NotBlank(message = "예약 취소에 사용할 비밀번호가 입력되지 않았습니다.")
+    val personalPassword: String,
 ) {
 
     fun toCommand(
@@ -31,6 +34,7 @@ data class CreateReservationRequest(
             startDateTime = startDateTime,
             endDateTime = endDateTime,
             password = password,
+            rawPersonalPassword = personalPassword,
         )
     }
 }
