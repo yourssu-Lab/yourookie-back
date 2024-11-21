@@ -9,7 +9,7 @@ class PasswordValidator {
         private const val ORGANIZATION_PASSWORD_REGEX = "^(?=(.*[a-zA-Z]))(?=(.*\\d))[a-zA-Z\\d!@#\$%^&*()_+=-]{8,}\$"
         private const val PERSONAL_RESERVATION_PASSWORD_REGEX = "^(?=(.*[a-zA-Z]))(?=(.*\\d))[a-zA-Z\\d!@#\$%^&*()_+=-]{4,}\$"
 
-        fun validate(rawPassword: String) {
+        fun validateOrganizationPassword(rawPassword: String) {
             validateNotBlank(rawPassword)
             validatePasswordFormat(rawPassword)
         }

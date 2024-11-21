@@ -15,6 +15,7 @@ class OrganizationService (
     fun create(
         command: CreateOrganizationCommand,
     ): Long {
+        PasswordValidator.validateOrganizationPassword(command.rawPassword)
         if (organizationReader.existByEmail(command.email)) {
             throw DuplicateEmailException("이미 존재하는 이메일입니다.")
         }
