@@ -6,12 +6,10 @@ import java.util.regex.Pattern
 class PasswordValidator {
 
     companion object {
-        private const val ORGANIZATION_PASSWORD_REGEX = "^(?=(.*[a-zA-Z]))(?=(.*\\d))[a-zA-Z\\d!@#\$%^&*()_+=-]{8,}\$"
-        private const val PERSONAL_RESERVATION_PASSWORD_REGEX = "^(?=(.*[a-zA-Z]))(?=(.*\\d))[a-zA-Z\\d!@#\$%^&*()_+=-]{4,}\$"
 
-        fun validateOrganizationPassword(rawPassword: String) {
+        fun validate(passwordFormat: PasswordFormat, rawPassword: String) {
             validateNotBlank(rawPassword)
-            validatePasswordFormat(rawPassword)
+            validatePasswordFormat(passwordFormat, rawPassword)
         }
 
         private fun validateNotBlank(rawPassword: String) {
@@ -20,20 +18,11 @@ class PasswordValidator {
             }
         }
 
-        private fun validatePasswordFormat(rawPassword: String) {
-            val pattern: Pattern = Pattern.compile(ORGANIZATION_PASSWORD_REGEX)
+        private fun validatePasswordFormat(format: PasswordFormat, rawPassword: String) {
+            val pattern: Pattern = Pattern.compile(format.regex)
             val matcher: Matcher = pattern.matcher(rawPassword)
             if (!matcher.matches()) {
-                throw InvalidPasswordException("비밀번호는 영어+숫자 8글자 이상이어야 합니다.")
-            }
-        }
-
-        fun validatePersonalPassword(rawPersonalPassword: String) {
-            validateNotBlank(rawPersonalPassword)
-            val pattern: Pattern = Pattern.compile(PERSONAL_RESERVATION_PASSWORD_REGEX)
-            val matcher: Matcher = pattern.matcher(rawPersonalPassword)
-            if (!matcher.matches()) {
-                throw InvalidPasswordException("비밀번호는 영어+숫자 4글자 이상이어야 합니다.")
+                throw InvalidPasswordException(format.errorMessage)
             }
         }
     }

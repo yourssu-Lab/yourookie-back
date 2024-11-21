@@ -1,6 +1,7 @@
 package com.yourssu.openssupot.domain.domain.organization
 
 import com.yourssu.openssupot.domain.domain.file.FileProcessor
+import com.yourssu.openssupot.domain.domain.password.PasswordFormat
 import com.yourssu.openssupot.domain.domain.password.PasswordValidator
 import com.yourssu.openssupot.domain.support.security.password.PasswordEncoder
 import org.springframework.stereotype.Service
@@ -16,7 +17,7 @@ class OrganizationService (
     fun create(
         command: CreateOrganizationCommand,
     ): Long {
-        PasswordValidator.validateOrganizationPassword(command.rawPassword)
+        PasswordValidator.validate(PasswordFormat.ORGANIZATION_PASSWORD, command.rawPassword)
         if (organizationReader.existByEmail(command.email)) {
             throw DuplicateEmailException("이미 존재하는 이메일입니다.")
         }
