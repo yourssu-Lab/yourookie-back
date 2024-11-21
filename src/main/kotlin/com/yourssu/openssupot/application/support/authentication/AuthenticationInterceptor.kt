@@ -1,5 +1,6 @@
 package com.yourssu.openssupot.application.support.authentication
 
+import com.yourssu.openssupot.domain.domain.authentication.AuthenticationService
 import com.yourssu.openssupot.domain.domain.authentication.PrivateClaims
 import com.yourssu.openssupot.domain.domain.organization.OrganizationRepository
 import com.yourssu.openssupot.domain.support.security.token.InvalidTokenException
@@ -16,6 +17,7 @@ import org.springframework.web.servlet.HandlerInterceptor
 class AuthenticationInterceptor(
     private val tokenDecoder: TokenDecoder,
     private val organizationRepository: OrganizationRepository,
+    private val authenticationService: AuthenticationService,
 ) : HandlerInterceptor {
 
     override fun preHandle(request: HttpServletRequest, response: HttpServletResponse, handler: Any): Boolean {
@@ -25,11 +27,15 @@ class AuthenticationInterceptor(
         }
 
         val privateClaims: PrivateClaims = decode(accessToken)
+        val organizationId = privateClaims.organizationId
 
-        if (!organizationRepository.existsById(privateClaims.organizationId)) {
+        if (!organizationRepository.existsById(organizationId)) {
             throw NoSuchOrganizationException("존재하지 않는 단체의 토큰입니다.")
         }
 
+        if (authenticationService.isBlacklisted(organizationId, accessToken)) {
+            throw InvalidTokenException("로그아웃되었습니다.")
+        }
         return true
     }
 
