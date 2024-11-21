@@ -3,6 +3,7 @@ package com.yourssu.openssupot.storage.domain.reservation
 import com.yourssu.openssupot.domain.domain.reservation.Reservation
 import com.yourssu.openssupot.domain.domain.reservation.ReservationRepository
 import java.time.LocalDateTime
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Repository
 
 @Repository
@@ -22,6 +23,10 @@ class ReservationRepositoryImpl(
         return jpaReservationRepository.existsBySpaceIdAndDateTimeRange(spaceId, startDateTime, endDateTime)
     }
 
+    override fun findById(id: Long): Reservation? {
+        return jpaReservationRepository.findByIdOrNull(id)?.toDomain()
+    }
+
     override fun findAllBySpaceIdAndDateTimeRange(
         spaceId: Long,
         startOfDay: LocalDateTime,
@@ -29,5 +34,9 @@ class ReservationRepositoryImpl(
     ): List<Reservation> {
         return jpaReservationRepository.findAllBySpaceIdAndDateRange(spaceId, startOfDay, endOfDay)
             .map { it.toDomain() }
+    }
+
+    override fun delete(reservation: Reservation) {
+        jpaReservationRepository.deleteById(reservation.id!!)
     }
 }
