@@ -6,6 +6,7 @@ import jakarta.validation.Valid
 import java.net.URI
 import java.time.LocalDate
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -37,5 +38,15 @@ class ReservationController(
         val response: List<ReadReservationResponse> = result.reservationDtos.map { ReadReservationResponse.from(it) }
 
         return ResponseEntity.ok(response)
+    }
+
+    @DeleteMapping("/reservations/{reservationId}")
+    fun delete(
+        @PathVariable reservationId: Long,
+        @RequestBody @Valid request: DeleteReservationRequest,
+    ): ResponseEntity<Unit> {
+        reservationService.delete(reservationId, request.personalPassword)
+
+        return ResponseEntity.noContent().build()
     }
 }
