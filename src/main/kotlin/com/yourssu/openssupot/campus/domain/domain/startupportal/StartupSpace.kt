@@ -7,6 +7,25 @@ class StartupSpace(
     val spaceType: SpaceType,
     val rentals: List<RentalStatus>,
 ) {
+
+    fun isAvailable(startTime: LocalTime, endTime: LocalTime): Boolean {
+        for (rental in rentals) {
+            val slotStartTime = rental.rentalTime
+            val slotEndTime = rental.rentalTime.plusHours(1L)
+            if (slotEndTime <= startTime || endTime <= slotStartTime) {
+                continue
+            }
+
+            if (!rental.possible) {
+                return false
+            }
+        }
+
+        val lastTime = rentals[rentals.size - 1].rentalTime.plusHours(1L)
+
+        return endTime <= lastTime
+    }
+
     companion object {
         fun from(
             rentalTimesResponse: RentalTimesResponse
