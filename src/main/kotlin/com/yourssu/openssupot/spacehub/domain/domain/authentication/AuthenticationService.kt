@@ -3,6 +3,7 @@ package com.yourssu.openssupot.spacehub.domain.domain.authentication
 import com.yourssu.openssupot.spacehub.application.support.authentication.NoSuchOrganizationException
 import com.yourssu.openssupot.spacehub.domain.domain.organization.Organization
 import com.yourssu.openssupot.spacehub.domain.domain.organization.OrganizationReader
+import com.yourssu.openssupot.spacehub.domain.domain.organization.OrganizationWriter
 import com.yourssu.openssupot.spacehub.domain.support.security.password.PasswordEncoder
 import com.yourssu.openssupot.spacehub.domain.support.security.token.InvalidTokenException
 import com.yourssu.openssupot.spacehub.domain.support.security.token.TokenDecoder
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service
 
 @Service
 class AuthenticationService(
+    private val organizationWriter: OrganizationWriter,
     private val organizationReader: OrganizationReader,
     private val blacklistTokenWriter: BlacklistTokenWriter,
     private val blacklistTokenReader: BlacklistTokenReader,
@@ -43,26 +45,7 @@ class AuthenticationService(
 
     fun logout(accessToken: String, refreshToken: String) {
         val organizationId = getValidOrganizationId(TokenType.ACCESS, accessToken)
-
-        val blacklistTokens: MutableList<BlacklistToken> = mutableListOf()
-        blacklistTokens.add(
-            BlacklistToken(
-                organizationId = organizationId,
-                tokenType = TokenType.ACCESS,
-                token = accessToken
-            )
-        )
-        if (isValidToken(TokenType.REFRESH, refreshToken)) {
-            blacklistTokens.add(
-                BlacklistToken(
-                    organizationId = organizationId,
-                    tokenType = TokenType.REFRESH,
-                    token = refreshToken
-                )
-            )
-        }
-
-        blacklistTokenWriter.write(blacklistTokens)
+        blacklistTokenWriter.register(organizationId, accessToken, refreshToken)
     }
 
     fun isValidToken(tokenType: TokenType, targetToken: String): Boolean {
@@ -99,5 +82,11 @@ class AuthenticationService(
         }
 
         return organizationId
+    }
+
+    fun withdraw(accessToken: String, refreshToken: String) {
+        val organizationId = getValidOrganizationId(TokenType.ACCESS, accessToken)
+        blacklistTokenWriter.register(organizationId, accessToken, refreshToken)
+        organizationWriter.withdraw(organizationId)
     }
 }
