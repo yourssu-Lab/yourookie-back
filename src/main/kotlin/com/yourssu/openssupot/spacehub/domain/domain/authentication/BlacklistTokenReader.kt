@@ -9,7 +9,7 @@ class BlacklistTokenReader(
     private val blacklistTokenRepository: BlacklistTokenRepository,
 ) {
 
-    fun existsByOrganizationIdAndTargetToken(organizationId: Long, targetToken: String): Boolean {
+    fun isBlacklisted(organizationId: Long, targetToken: String): Boolean {
         return blacklistTokenRepository.existsByOrganizationIdAndToken(organizationId, targetToken)
     }
 }

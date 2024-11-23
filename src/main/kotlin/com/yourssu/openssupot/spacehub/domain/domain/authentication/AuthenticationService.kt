@@ -42,9 +42,7 @@ class AuthenticationService(
     }
 
     fun logout(accessToken: String, refreshToken: String) {
-        val claims: Claims = tokenDecoder.decode(TokenType.ACCESS, accessToken)
-            ?: throw InvalidTokenException("유효하지 않은 토큰입니다.")
-        val organizationId = PrivateClaims.from(claims).organizationId
+        val organizationId = getValidOrganizationId(TokenType.ACCESS, accessToken)
 
         val blacklistTokens: MutableList<BlacklistToken> = mutableListOf()
         blacklistTokens.add(
@@ -67,7 +65,23 @@ class AuthenticationService(
         blacklistTokenWriter.write(blacklistTokens)
     }
 
-    fun decode(tokenType: TokenType, accessToken: String): PrivateClaims {
+    fun isValidToken(tokenType: TokenType, targetToken: String): Boolean {
+        val claims: Claims = tokenDecoder.decode(tokenType, targetToken)
+            ?: return false
+
+        val organizationId = PrivateClaims.from(claims).organizationId
+
+        return organizationReader.existsById(organizationId) &&
+                !blacklistTokenReader.isBlacklisted(organizationId, targetToken)
+    }
+
+    fun refreshToken(requestTime: LocalDateTime, refreshToken: String): TokenDto {
+        val privateClaims = decode(TokenType.REFRESH, refreshToken)
+
+        return generateTokens(requestTime, privateClaims)
+    }
+
+    private fun decode(tokenType: TokenType, accessToken: String): PrivateClaims {
         val claims: Claims = tokenDecoder.decode(tokenType, accessToken)
             ?: throw InvalidTokenException("유효한 토큰이 아닙니다.")
 
@@ -75,42 +89,15 @@ class AuthenticationService(
     }
 
     fun getValidOrganizationId(tokenType: TokenType, token: String): Long {
-        val claims: Claims = tokenDecoder.decode(tokenType, token)
-            ?: throw InvalidTokenException("유효한 토큰이 아닙니다.")
-
-        val organizationId = PrivateClaims.from(claims).organizationId
-        if (!existsByOrganizationId(organizationId)) {
+        val privateClaims: PrivateClaims = decode(tokenType, token)
+        val organizationId = privateClaims.organizationId
+        if (!organizationReader.existsById(organizationId)) {
             throw NoSuchOrganizationException("존재하지 않는 단체의 토큰입니다.")
         }
-        if (isBlacklisted(organizationId, token)) {
+        if (blacklistTokenReader.isBlacklisted(organizationId, token)) {
             throw InvalidTokenException("로그아웃되었습니다.")
         }
 
         return organizationId
-    }
-
-    fun isValidToken(tokenType: TokenType, targetToken: String): Boolean {
-        val claims: Claims = tokenDecoder.decode(tokenType, targetToken)
-            ?: throw InvalidTokenException("유효하지 않은 토큰입니다.")
-        val organizationId = PrivateClaims.from(claims).organizationId
-
-        return !isBlacklisted(organizationId, targetToken)
-    }
-
-    fun existsByOrganizationId(organizationId: Long): Boolean {
-        return organizationReader.existsById(organizationId)
-    }
-
-    fun isBlacklisted(organizationId: Long, targetToken: String): Boolean {
-        return blacklistTokenReader.existsByOrganizationIdAndTargetToken(organizationId, targetToken)
-    }
-
-    fun refreshToken(requestTime: LocalDateTime, refreshToken: String): TokenDto {
-        val claims: Claims = tokenDecoder.decode(TokenType.REFRESH, refreshToken)
-            ?: throw InvalidTokenException("유효한 토큰이 아닙니다.")
-
-        val privateClaims = PrivateClaims.from(claims)
-
-        return generateTokens(requestTime, privateClaims)
     }
 }
