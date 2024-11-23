@@ -2,7 +2,6 @@ package com.yourssu.openssupot.spacehub.application.support.authentication
 
 import com.yourssu.openssupot.spacehub.domain.domain.authentication.AuthenticationService
 import com.yourssu.openssupot.spacehub.domain.domain.authentication.PrivateClaims
-import com.yourssu.openssupot.spacehub.domain.domain.organization.OrganizationRepository
 import com.yourssu.openssupot.spacehub.domain.support.security.token.InvalidTokenException
 import com.yourssu.openssupot.spacehub.domain.support.security.token.TokenDecoder
 import com.yourssu.openssupot.spacehub.domain.support.security.token.TokenType
@@ -16,7 +15,6 @@ import org.springframework.web.servlet.HandlerInterceptor
 @Component
 class AuthenticationInterceptor(
     private val tokenDecoder: TokenDecoder,
-    private val organizationRepository: OrganizationRepository,
     private val authenticationService: AuthenticationService,
 ) : HandlerInterceptor {
 
@@ -29,7 +27,7 @@ class AuthenticationInterceptor(
         val privateClaims: PrivateClaims = decode(accessToken)
         val organizationId = privateClaims.organizationId
 
-        if (!organizationRepository.existsById(organizationId)) {
+        if (!authenticationService.existsByOrganizationId(organizationId)) {
             throw NoSuchOrganizationException("존재하지 않는 단체의 토큰입니다.")
         }
 

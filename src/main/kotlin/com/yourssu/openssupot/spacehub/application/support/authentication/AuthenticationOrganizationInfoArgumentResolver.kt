@@ -1,7 +1,7 @@
 package com.yourssu.openssupot.spacehub.application.support.authentication
 
+import com.yourssu.openssupot.spacehub.domain.domain.authentication.AuthenticationService
 import com.yourssu.openssupot.spacehub.domain.domain.authentication.PrivateClaims
-import com.yourssu.openssupot.spacehub.domain.domain.organization.OrganizationRepository
 import com.yourssu.openssupot.spacehub.domain.support.security.token.InvalidTokenException
 import com.yourssu.openssupot.spacehub.domain.support.security.token.TokenDecoder
 import com.yourssu.openssupot.spacehub.domain.support.security.token.TokenType
@@ -18,7 +18,7 @@ import org.springframework.web.method.support.ModelAndViewContainer
 @Component
 class AuthenticationOrganizationInfoArgumentResolver(
     private val tokenDecoder: TokenDecoder,
-    private val organizationRepository: OrganizationRepository,
+    private val authenticationService: AuthenticationService,
 ) : HandlerMethodArgumentResolver {
 
     override fun supportsParameter(parameter: MethodParameter): Boolean {
@@ -42,12 +42,17 @@ class AuthenticationOrganizationInfoArgumentResolver(
         }
 
         val privateClaims: PrivateClaims = decode(accessToken)
+        val organizationId = privateClaims.organizationId
 
-        if (!organizationRepository.existsById(privateClaims.organizationId)) {
+        if (!authenticationService.existsByOrganizationId(organizationId)) {
             throw NoSuchOrganizationException("존재하지 않는 단체의 토큰입니다.")
         }
 
-        return AuthenticationOrganizationInfo(privateClaims.organizationId)
+        if (authenticationService.isBlacklisted(organizationId, accessToken)) {
+            throw InvalidTokenException("로그아웃되었습니다.")
+        }
+
+        return AuthenticationOrganizationInfo(organizationId)
     }
 
     private fun isRequired(parameter: MethodParameter): Boolean {

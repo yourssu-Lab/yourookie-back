@@ -74,6 +74,10 @@ class AuthenticationService(
         return !isBlacklisted(organizationId, targetToken)
     }
 
+    fun existsByOrganizationId(organizationId: Long): Boolean {
+        return organizationReader.existsById(organizationId)
+    }
+
     fun isBlacklisted(organizationId: Long, targetToken: String): Boolean {
         return blacklistTokenReader.existsByOrganizationIdAndTargetToken(organizationId, targetToken)
     }
