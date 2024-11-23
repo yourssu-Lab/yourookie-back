@@ -40,4 +40,8 @@ class OrganizationWriter(
 
         return updatedOrganization
     }
+
+    fun withdraw(organizationId: Long) {
+        organizationRepository.deleteById(organizationId)
+    }
 }

@@ -8,4 +8,6 @@ interface OrganizationRepository {
     fun findById(id: Long): Organization?
     fun findByEmail(email: String): Organization?
     fun searchByNameKeyword(keyword: String): List<Organization>
+
+    fun deleteById(id: Long)
 }
