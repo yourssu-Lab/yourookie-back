@@ -1,5 +1,7 @@
 package com.yourssu.openssupot.campus.domain.domain.oasis
 
+import java.time.LocalTime
+
 class SeminarRoom(
     val id: Int,
     val name: String,
@@ -8,6 +10,36 @@ class SeminarRoom(
     val isChargeable: Boolean,
     val timeLine: List<TimeSlot>
 ) {
+
+    fun isAvailable(startTime: LocalTime, endTime: LocalTime): Boolean {
+        if (!isChargeable) {
+            return false
+        }
+
+        for (timeSlot in timeLine) {
+            if (timeSlot.hour >= 24) {
+                continue
+            }
+
+            val slotHourTime = LocalTime.of(timeSlot.hour, 0)
+            for ((index, minuteSlot) in timeSlot.minutes.withIndex()) {
+                val slotStartTime = slotHourTime.plusMinutes(index * 10L)
+                val slotEndTime = slotStartTime.plusMinutes(10L)
+
+                if (slotEndTime <= startTime || endTime <= slotStartTime) {
+                    continue
+                }
+
+                if (minuteSlot.status != "" || minuteSlot.selectable == false) {
+                    return false
+                }
+            }
+        }
+
+        val lastTimeSlot = timeLine[timeLine.size - 1]
+
+        return endTime.hour <= lastTimeSlot.hour
+    }
 
     companion object {
         fun from(roomResponseItem: RoomResponseItem, roomType: RoomType): SeminarRoom {
