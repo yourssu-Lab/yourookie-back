@@ -33,4 +33,8 @@ class OrganizationRepositoryImpl(
     override fun searchByNameKeyword(keyword: String): List<Organization> {
         return jpaOrganizationRepository.searchByNameKeyword(keyword).map { it.toDomain() }
     }
+
+    override fun deleteById(id: Long) {
+        jpaOrganizationRepository.deleteById(id)
+    }
 }

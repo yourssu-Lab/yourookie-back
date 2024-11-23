@@ -1,5 +1,6 @@
 package com.yourssu.openssupot.spacehub.domain.domain.authentication
 
+import com.yourssu.openssupot.spacehub.domain.support.security.token.TokenType
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 
@@ -9,7 +10,23 @@ class BlacklistTokenWriter(
     private val blacklistTokenRepository: BlacklistTokenRepository,
 ) {
 
-    fun write(blacklistTokens: List<BlacklistToken>): List<BlacklistToken> {
-        return blacklistTokenRepository.saveAll(blacklistTokens)
+    fun register(organizationId: Long, accessToken: String, refreshToken: String) {
+        val blacklistTokens: MutableList<BlacklistToken> = mutableListOf()
+        blacklistTokens.add(
+            BlacklistToken(
+                organizationId = organizationId,
+                tokenType = TokenType.ACCESS,
+                token = accessToken
+            )
+        )
+        blacklistTokens.add(
+            BlacklistToken(
+                organizationId = organizationId,
+                tokenType = TokenType.REFRESH,
+                token = refreshToken
+            )
+        )
+
+        blacklistTokenRepository.saveAll(blacklistTokens)
     }
 }
