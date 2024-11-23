@@ -1,5 +1,6 @@
 package com.yourssu.openssupot.spacehub.domain.domain.authentication
 
+import com.yourssu.openssupot.spacehub.application.support.authentication.NoSuchOrganizationException
 import com.yourssu.openssupot.spacehub.domain.domain.organization.Organization
 import com.yourssu.openssupot.spacehub.domain.domain.organization.OrganizationReader
 import com.yourssu.openssupot.spacehub.domain.support.security.password.PasswordEncoder
@@ -64,6 +65,28 @@ class AuthenticationService(
         }
 
         blacklistTokenWriter.write(blacklistTokens)
+    }
+
+    fun decode(tokenType: TokenType, accessToken: String): PrivateClaims {
+        val claims: Claims = tokenDecoder.decode(tokenType, accessToken)
+            ?: throw InvalidTokenException("유효한 토큰이 아닙니다.")
+
+        return PrivateClaims.from(claims)
+    }
+
+    fun getValidOrganizationId(tokenType: TokenType, token: String): Long {
+        val claims: Claims = tokenDecoder.decode(tokenType, token)
+            ?: throw InvalidTokenException("유효한 토큰이 아닙니다.")
+
+        val organizationId = PrivateClaims.from(claims).organizationId
+        if (!existsByOrganizationId(organizationId)) {
+            throw NoSuchOrganizationException("존재하지 않는 단체의 토큰입니다.")
+        }
+        if (isBlacklisted(organizationId, token)) {
+            throw InvalidTokenException("로그아웃되었습니다.")
+        }
+
+        return organizationId
     }
 
     fun isValidToken(tokenType: TokenType, targetToken: String): Boolean {

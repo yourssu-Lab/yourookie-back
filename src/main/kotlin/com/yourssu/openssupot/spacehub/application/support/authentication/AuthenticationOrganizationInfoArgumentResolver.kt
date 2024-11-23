@@ -1,11 +1,7 @@
 package com.yourssu.openssupot.spacehub.application.support.authentication
 
 import com.yourssu.openssupot.spacehub.domain.domain.authentication.AuthenticationService
-import com.yourssu.openssupot.spacehub.domain.domain.authentication.PrivateClaims
-import com.yourssu.openssupot.spacehub.domain.support.security.token.InvalidTokenException
-import com.yourssu.openssupot.spacehub.domain.support.security.token.TokenDecoder
 import com.yourssu.openssupot.spacehub.domain.support.security.token.TokenType
-import io.jsonwebtoken.Claims
 import org.springframework.core.MethodParameter
 import org.springframework.http.HttpHeaders
 import org.springframework.lang.NonNull
@@ -17,7 +13,6 @@ import org.springframework.web.method.support.ModelAndViewContainer
 
 @Component
 class AuthenticationOrganizationInfoArgumentResolver(
-    private val tokenDecoder: TokenDecoder,
     private val authenticationService: AuthenticationService,
 ) : HandlerMethodArgumentResolver {
 
@@ -41,16 +36,7 @@ class AuthenticationOrganizationInfoArgumentResolver(
             return null
         }
 
-        val privateClaims: PrivateClaims = decode(accessToken)
-        val organizationId = privateClaims.organizationId
-
-        if (!authenticationService.existsByOrganizationId(organizationId)) {
-            throw NoSuchOrganizationException("존재하지 않는 단체의 토큰입니다.")
-        }
-
-        if (authenticationService.isBlacklisted(organizationId, accessToken)) {
-            throw InvalidTokenException("로그아웃되었습니다.")
-        }
+        val organizationId = authenticationService.getValidOrganizationId(TokenType.ACCESS, accessToken)
 
         return AuthenticationOrganizationInfo(organizationId)
     }
@@ -58,12 +44,5 @@ class AuthenticationOrganizationInfoArgumentResolver(
     private fun isRequired(parameter: MethodParameter): Boolean {
         return parameter.getParameterAnnotation(AuthenticationOrganization::class.java)
             ?.required ?: true
-    }
-
-    private fun decode(accessToken: String): PrivateClaims {
-        val claims: Claims = tokenDecoder.decode(TokenType.ACCESS, accessToken)
-            ?: throw InvalidTokenException("유효한 토큰이 아닙니다.")
-
-        return PrivateClaims.from(claims)
     }
 }
