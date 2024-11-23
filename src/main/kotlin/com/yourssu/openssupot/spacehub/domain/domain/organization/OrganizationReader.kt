@@ -45,4 +45,8 @@ class OrganizationReader(
 
         return savedOrganization
     }
+
+    fun existsById(organizationId: Long): Boolean {
+        return organizationRepository.existsById(organizationId)
+    }
 }

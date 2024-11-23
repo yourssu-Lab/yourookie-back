@@ -1,5 +1,6 @@
 package com.yourssu.openssupot.spacehub.domain.domain.authentication
 
+import com.yourssu.openssupot.spacehub.application.support.authentication.NoSuchOrganizationException
 import com.yourssu.openssupot.spacehub.domain.domain.organization.Organization
 import com.yourssu.openssupot.spacehub.domain.domain.organization.OrganizationReader
 import com.yourssu.openssupot.spacehub.domain.support.security.password.PasswordEncoder
@@ -41,9 +42,7 @@ class AuthenticationService(
     }
 
     fun logout(accessToken: String, refreshToken: String) {
-        val claims: Claims = tokenDecoder.decode(TokenType.ACCESS, accessToken)
-            ?: throw InvalidTokenException("유효하지 않은 토큰입니다.")
-        val organizationId = PrivateClaims.from(claims).organizationId
+        val organizationId = getValidOrganizationId(TokenType.ACCESS, accessToken)
 
         val blacklistTokens: MutableList<BlacklistToken> = mutableListOf()
         blacklistTokens.add(
@@ -68,22 +67,37 @@ class AuthenticationService(
 
     fun isValidToken(tokenType: TokenType, targetToken: String): Boolean {
         val claims: Claims = tokenDecoder.decode(tokenType, targetToken)
-            ?: throw InvalidTokenException("유효하지 않은 토큰입니다.")
+            ?: return false
+
         val organizationId = PrivateClaims.from(claims).organizationId
 
-        return !isBlacklisted(organizationId, targetToken)
-    }
-
-    fun isBlacklisted(organizationId: Long, targetToken: String): Boolean {
-        return blacklistTokenReader.existsByOrganizationIdAndTargetToken(organizationId, targetToken)
+        return organizationReader.existsById(organizationId) &&
+                !blacklistTokenReader.isBlacklisted(organizationId, targetToken)
     }
 
     fun refreshToken(requestTime: LocalDateTime, refreshToken: String): TokenDto {
-        val claims: Claims = tokenDecoder.decode(TokenType.REFRESH, refreshToken)
-            ?: throw InvalidTokenException("유효한 토큰이 아닙니다.")
-
-        val privateClaims = PrivateClaims.from(claims)
+        val privateClaims = decode(TokenType.REFRESH, refreshToken)
 
         return generateTokens(requestTime, privateClaims)
+    }
+
+    private fun decode(tokenType: TokenType, accessToken: String): PrivateClaims {
+        val claims: Claims = tokenDecoder.decode(tokenType, accessToken)
+            ?: throw InvalidTokenException("유효한 토큰이 아닙니다.")
+
+        return PrivateClaims.from(claims)
+    }
+
+    fun getValidOrganizationId(tokenType: TokenType, token: String): Long {
+        val privateClaims: PrivateClaims = decode(tokenType, token)
+        val organizationId = privateClaims.organizationId
+        if (!organizationReader.existsById(organizationId)) {
+            throw NoSuchOrganizationException("존재하지 않는 단체의 토큰입니다.")
+        }
+        if (blacklistTokenReader.isBlacklisted(organizationId, token)) {
+            throw InvalidTokenException("로그아웃되었습니다.")
+        }
+
+        return organizationId
     }
 }
