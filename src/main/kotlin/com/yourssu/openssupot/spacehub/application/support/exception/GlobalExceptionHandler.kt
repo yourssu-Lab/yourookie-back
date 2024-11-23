@@ -35,27 +35,27 @@ import org.springframework.web.bind.annotation.RestControllerAdvice
 class GlobalExceptionHandler {
 
     @ExceptionHandler(LoginRequiredException::class)
-    fun handleLoginRequiredException(e: LoginRequiredException): ResponseEntity<ExceptionResponse> {
+    fun handleLoginRequiredException(e: LoginRequiredException): ResponseEntity<UnauthorizedResponse> {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-            .body(ExceptionResponse(e.message))
+            .body(UnauthorizedResponse(e.message, false))
     }
 
     @ExceptionHandler(NoSuchOrganizationException::class)
-    fun handleNoSuchOrganizationException(e: NoSuchOrganizationException): ResponseEntity<ExceptionResponse> {
+    fun handleNoSuchOrganizationException(e: NoSuchOrganizationException): ResponseEntity<UnauthorizedResponse> {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-            .body(ExceptionResponse(e.message))
+            .body(UnauthorizedResponse(e.message, true))
     }
 
     @ExceptionHandler(EmptyTokenException::class)
-    fun handleEmptyTokenException(e: EmptyTokenException): ResponseEntity<ExceptionResponse> {
+    fun handleEmptyTokenException(e: EmptyTokenException): ResponseEntity<UnauthorizedResponse> {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-            .body(ExceptionResponse(e.message))
+            .body(UnauthorizedResponse(e.message, false))
     }
 
     @ExceptionHandler(PasswordNotMatchException::class)
-    fun handlePasswordNotMatchException(e: PasswordNotMatchException): ResponseEntity<ExceptionResponse> {
+    fun handlePasswordNotMatchException(e: PasswordNotMatchException): ResponseEntity<UnauthorizedResponse> {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-            .body(ExceptionResponse(e.message))
+            .body(UnauthorizedResponse(e.message, false))
     }
 
     @ExceptionHandler(InvalidFileException::class)
@@ -119,9 +119,9 @@ class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(UnauthorizedOrganizationException::class)
-    fun handleUnauthorizedOrganizationException(e: UnauthorizedOrganizationException): ResponseEntity<ExceptionResponse> {
+    fun handleUnauthorizedOrganizationException(e: UnauthorizedOrganizationException): ResponseEntity<UnauthorizedResponse> {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-            .body(ExceptionResponse(e.message))
+            .body(UnauthorizedResponse(e.message, false))
     }
 
     @ExceptionHandler(InvalidReservationException::class)
@@ -167,9 +167,9 @@ class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(InvalidTokenException::class)
-    fun handleInvalidTokenException(e: InvalidTokenException): ResponseEntity<ExceptionResponse> {
+    fun handleInvalidTokenException(e: InvalidTokenException): ResponseEntity<UnauthorizedResponse> {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-            .body(ExceptionResponse(e.message))
+            .body(UnauthorizedResponse(e.message, true))
     }
 
     @ExceptionHandler(MethodArgumentNotValidException::class)
