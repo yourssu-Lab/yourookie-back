@@ -25,22 +25,33 @@ class OasisReader(
     private fun getSeminarRoomsResponse(
         roomTypeId: Int,
         date: LocalDate,
-        isRecursive: Boolean = false,
     ): SeminarRoomsResponse {
-        val seminarRoomsResponse: SeminarRoomsResponse = oasisClient.getSeminarRooms(
+        try {
+            val seminarRoomResponse: SeminarRoomsResponse = getFromOasis(roomTypeId, date)
+            if (!seminarRoomResponse.success) {
+                oasisTokenProvider.invalidateAccessToken()
+                oasisTokenProvider.fetchNewAccessToken()
+
+                return getFromOasis(roomTypeId, date)
+            }
+
+            return seminarRoomResponse
+        } catch (e: Exception) {
+            oasisTokenProvider.invalidateAccessToken()
+            oasisTokenProvider.fetchNewAccessToken()
+
+            return getFromOasis(roomTypeId, date)
+        }
+    }
+
+    private fun getFromOasis(
+        roomTypeId: Int,
+        date: LocalDate,
+    ): SeminarRoomsResponse {
+        return oasisClient.getSeminarRooms(
             accessToken = oasisTokenProvider.getAccessToken(),
             roomTypeId = roomTypeId.toLong(),
             hopeDate = date.toString(),
         )
-        if (!seminarRoomsResponse.success) {
-            check(!isRecursive) { "Failed to get seminar rooms" }
-
-            oasisTokenProvider.invalidateAccessToken()
-            oasisTokenProvider.fetchNewAccessToken()
-
-            return getSeminarRoomsResponse(roomTypeId, date, true)
-        }
-
-        return seminarRoomsResponse
     }
 }
