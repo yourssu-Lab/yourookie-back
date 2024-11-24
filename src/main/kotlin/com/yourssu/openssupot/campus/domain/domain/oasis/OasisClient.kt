@@ -16,15 +16,7 @@ interface OasisClient {
     @GetMapping("/pyxis-api/1/api/rooms")
     fun getSeminarRooms(
         @RequestHeader("pyxis-auth-token") accessToken: String,
-        @RequestParam("roomTypeId") roomTypeId: Long = 1L,
-        @RequestParam("smufMethodCode") smufMethodCode: String = "PC",
-        @RequestParam("hopeDate") hopeDate: String,
-    ): SeminarRoomsResponse
-
-    @GetMapping("/pyxis-api/1/api/rooms")
-    fun getOpenSeminarRooms(
-        @RequestHeader("pyxis-auth-token") accessToken: String,
-        @RequestParam("roomTypeId") roomTypeId: Long = 5L,
+        @RequestParam("roomTypeId") roomTypeId: Long,
         @RequestParam("smufMethodCode") smufMethodCode: String = "PC",
         @RequestParam("hopeDate") hopeDate: String,
     ): SeminarRoomsResponse
