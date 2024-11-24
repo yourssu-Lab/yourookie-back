@@ -2,6 +2,7 @@ package com.yourssu.openssupot.spacehub.application.domain.organization
 
 import com.yourssu.openssupot.spacehub.application.support.authentication.AuthenticationOrganization
 import com.yourssu.openssupot.spacehub.application.support.authentication.AuthenticationOrganizationInfo
+import com.yourssu.openssupot.spacehub.domain.domain.organization.CreateOrganizationResult
 import com.yourssu.openssupot.spacehub.domain.domain.organization.OrganizationService
 import com.yourssu.openssupot.spacehub.domain.domain.organization.ReadOrganizationsResult
 import jakarta.validation.Valid
@@ -26,10 +27,12 @@ class OrganizationController(
     fun create(
         @RequestPart(required = false) image: MultipartFile?,
         @RequestPart @Valid request: CreateOrganizationRequest,
-    ): ResponseEntity<Unit> {
-        val organizationId = organizationService.create(request.toCommand(image))
+    ): ResponseEntity<CreateOrganizationResponse> {
+        val result: CreateOrganizationResult = organizationService.create(request.toCommand(image))
+        val response = CreateOrganizationResponse.from(result)
+        val organizationId: Long = result.id
 
-        return ResponseEntity.created(URI.create("/organizations/$organizationId")).build()
+        return ResponseEntity.created(URI.create("/organizations/$organizationId")).body(response)
     }
 
     @GetMapping("/check-email")

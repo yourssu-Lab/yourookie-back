@@ -1,9 +1,14 @@
 package com.yourssu.openssupot.spacehub.domain.domain.organization
 
+import com.yourssu.openssupot.spacehub.domain.domain.authentication.PrivateClaims
+import com.yourssu.openssupot.spacehub.domain.domain.authentication.TokenDto
 import com.yourssu.openssupot.spacehub.domain.domain.file.FileProcessor
 import com.yourssu.openssupot.spacehub.domain.domain.password.PasswordFormat
 import com.yourssu.openssupot.spacehub.domain.domain.password.PasswordValidator
 import com.yourssu.openssupot.spacehub.domain.support.security.password.PasswordEncoder
+import com.yourssu.openssupot.spacehub.domain.support.security.token.TokenEncoder
+import com.yourssu.openssupot.spacehub.domain.support.security.token.TokenType
+import java.time.LocalDateTime
 import org.springframework.stereotype.Service
 
 @Service
@@ -12,11 +17,12 @@ class OrganizationService(
     private val passwordEncoder: PasswordEncoder,
     private val organizationWriter: OrganizationWriter,
     private val organizationReader: OrganizationReader,
+    private val tokenEncoder: TokenEncoder,
 ) {
 
     fun create(
         command: CreateOrganizationCommand,
-    ): Long {
+    ): CreateOrganizationResult {
         PasswordValidator.validate(PasswordFormat.ORGANIZATION_PASSWORD, command.rawPassword)
         if (organizationReader.existByEmail(command.email)) {
             throw DuplicateEmailException("이미 존재하는 이메일입니다.")
@@ -35,7 +41,18 @@ class OrganizationService(
             encryptedReservationPassword
         )
 
-        return savedOrganization.id!!
+        // TODO: AuthenticationService.login() 메서드 코드와의 중복 해결
+        val privateClaims = PrivateClaims(savedOrganization.id!!)
+        val tokenDto: TokenDto = generateTokens(LocalDateTime.now(), privateClaims)
+
+        return CreateOrganizationResult(savedOrganization.id, savedOrganization.getNameValue(), tokenDto)
+    }
+
+    private fun generateTokens(time: LocalDateTime, privateClaims: PrivateClaims): TokenDto {
+        val accessToken: String = tokenEncoder.encode(time, TokenType.ACCESS, privateClaims.toMap())
+        val refreshToken: String = tokenEncoder.encode(time, TokenType.REFRESH, privateClaims.toMap())
+
+        return TokenDto(accessToken, refreshToken)
     }
 
     fun readById(organizationId: Long): OrganizationDto {
