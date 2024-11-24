@@ -12,56 +12,46 @@ class OasisReader(
     fun getAllByDate(date: LocalDate): List<SeminarRoom> {
         val seminarRooms = mutableListOf<SeminarRoom>()
 
-        val seminarRoomsResponse: SeminarRoomsResponse = getSeminarRoomsResponse(date)
-        seminarRooms.addAll(seminarRoomsResponse.data.list.map {
-            SeminarRoom.from(it, RoomType.SEMINAR_ROOM)
-        })
-
-        val openSeminarRoomsResponse: SeminarRoomsResponse = getOpenSeminarRoomsResponse(date)
-        seminarRooms.addAll(openSeminarRoomsResponse.data.list.map {
-            SeminarRoom.from(it, RoomType.OPEN_SEMINAR_ROOM)
-        })
+        for (roomType in RoomType.entries) {
+            val seminarRoomsResponse: SeminarRoomsResponse = getSeminarRoomsResponse(roomType.id, date)
+            seminarRooms.addAll(seminarRoomsResponse.data.list.map {
+                SeminarRoom.from(it, roomType)
+            })
+        }
 
         return seminarRooms
     }
 
     private fun getSeminarRoomsResponse(
+        roomTypeId: Int,
         date: LocalDate,
-        isRecursive: Boolean = false,
     ): SeminarRoomsResponse {
-        val seminarRoomsResponse: SeminarRoomsResponse = oasisClient.getSeminarRooms(
-            accessToken = oasisTokenProvider.getAccessToken(),
-            hopeDate = date.toString(),
-        )
-        if (!seminarRoomsResponse.success) {
-            check(!isRecursive) { "Failed to get seminar rooms" }
+        try {
+            val seminarRoomResponse: SeminarRoomsResponse = getFromOasis(roomTypeId, date)
+            if (!seminarRoomResponse.success) {
+                oasisTokenProvider.invalidateAccessToken()
+                oasisTokenProvider.fetchNewAccessToken()
 
+                return getFromOasis(roomTypeId, date)
+            }
+
+            return seminarRoomResponse
+        } catch (e: Exception) {
             oasisTokenProvider.invalidateAccessToken()
             oasisTokenProvider.fetchNewAccessToken()
 
-            return getSeminarRoomsResponse(date, true)
+            return getFromOasis(roomTypeId, date)
         }
-
-        return seminarRoomsResponse
     }
 
-    private fun getOpenSeminarRoomsResponse(
+    private fun getFromOasis(
+        roomTypeId: Int,
         date: LocalDate,
-        isRecursive: Boolean = false,
     ): SeminarRoomsResponse {
-        val openSeminarRoomsResponse: SeminarRoomsResponse = oasisClient.getOpenSeminarRooms(
+        return oasisClient.getSeminarRooms(
             accessToken = oasisTokenProvider.getAccessToken(),
+            roomTypeId = roomTypeId.toLong(),
             hopeDate = date.toString(),
         )
-        if (!openSeminarRoomsResponse.success) {
-            check(!isRecursive) { "Failed to get open seminar rooms" }
-
-            oasisTokenProvider.invalidateAccessToken()
-            oasisTokenProvider.fetchNewAccessToken()
-
-            return getOpenSeminarRoomsResponse(date, true)
-        }
-
-        return openSeminarRoomsResponse
     }
 }
