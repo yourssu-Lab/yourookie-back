@@ -29,6 +29,7 @@ class WebConfiguration(
             .allowedOrigins(
                 "http://localhost:5173",
                 "https://localhost:5173",
+                "https://open-ssupot.vercel.app"
             )
             .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
             .allowedHeaders("*")
