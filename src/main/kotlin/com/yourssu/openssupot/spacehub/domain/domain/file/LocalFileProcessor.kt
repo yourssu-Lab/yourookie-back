@@ -60,7 +60,7 @@ class LocalFileProcessor(
 
     private fun extractExtension(originalFilename: String): String {
         val extension = originalFilename.substring(originalFilename.lastIndexOf(EXTENSION_SEPARATOR) + 1)
-        if (!EXTENSION.contains(extension)) {
+        if (!EXTENSION.contains(extension.lowercase())) {
             throw UnsupportedFileExtensionException("지원하지 않는 확장자입니다. : $extension")
         }
 
