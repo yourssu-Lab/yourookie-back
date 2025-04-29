@@ -2,17 +2,21 @@ package com.yourssu.openssupot.spacehub.application.support.configuration
 
 import com.yourssu.openssupot.spacehub.application.support.authentication.AuthenticationInterceptor
 import com.yourssu.openssupot.spacehub.application.support.authentication.AuthenticationOrganizationInfoArgumentResolver
+import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpHeaders
+import org.springframework.http.HttpMethod
 import org.springframework.web.method.support.HandlerMethodArgumentResolver
 import org.springframework.web.servlet.config.annotation.CorsRegistry
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 
 @Configuration
+@EnableConfigurationProperties(CorsProperties::class)
 class WebConfiguration(
     private val authenticationInterceptor: AuthenticationInterceptor,
-    val authenticationOrganizationInfoArgumentResolver: AuthenticationOrganizationInfoArgumentResolver
+    private val authenticationOrganizationInfoArgumentResolver: AuthenticationOrganizationInfoArgumentResolver,
+    private val corsProperties: CorsProperties,
 ) : WebMvcConfigurer {
 
     override fun addInterceptors(registry: InterceptorRegistry) {
@@ -26,13 +30,9 @@ class WebConfiguration(
 
     override fun addCorsMappings(registry: CorsRegistry) {
         registry.addMapping("/**")
-            .allowedOrigins(
-                "http://localhost:5173",
-                "https://localhost:5173",
-                "https://openssupot.vercel.app"
-            )
-            .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
+            .allowedOrigins(*corsProperties.allowedOrigins)
             .allowedHeaders("*")
+            .allowedMethods(*HttpMethod.values().map { it.name() }.toTypedArray())
             .exposedHeaders(HttpHeaders.LOCATION)
             .allowCredentials(true)
     }
