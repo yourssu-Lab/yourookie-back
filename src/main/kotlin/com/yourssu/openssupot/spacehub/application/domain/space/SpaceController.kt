@@ -5,6 +5,8 @@ import com.yourssu.openssupot.spacehub.application.support.authentication.Authen
 import com.yourssu.openssupot.spacehub.domain.domain.space.CreateSpaceCommand
 import com.yourssu.openssupot.spacehub.domain.domain.space.ReadSpacesResult
 import com.yourssu.openssupot.spacehub.domain.domain.space.SpaceService
+import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
 import java.net.URI
 import org.springframework.http.ResponseEntity
@@ -18,10 +20,14 @@ import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.multipart.MultipartFile
 
 @RestController
+@Tag(name = "Space", description = "공간 API")
 class SpaceController(
     private val spaceService: SpaceService,
 ) {
 
+    @Operation(
+        summary = "공간 생성",
+    )
     @PostMapping("/spaces")
     fun create(
         @AuthenticationOrganization authInfo: AuthenticationOrganizationInfo,
@@ -35,6 +41,9 @@ class SpaceController(
         return ResponseEntity.created(URI.create("/spaces/$spaceId")).build()
     }
 
+    @Operation(
+        summary = "공간 단일 조회",
+    )
     @GetMapping("/spaces/{spaceId}")
     fun readById(
         @PathVariable spaceId: Long,
@@ -45,6 +54,9 @@ class SpaceController(
         return ResponseEntity.ok(response)
     }
 
+    @Operation(
+        summary = "단체의 공간 목록 조회",
+    )
     @GetMapping("/spaces")
     fun readAllByOrganizationId(
         @RequestParam organizationId: Long,
@@ -55,6 +67,9 @@ class SpaceController(
         return ResponseEntity.ok(response)
     }
 
+    @Operation(
+        summary = "공간 정보 수정",
+    )
     @PatchMapping("/spaces/{spaceId}")
     fun update(
         @AuthenticationOrganization authInfo: AuthenticationOrganizationInfo,

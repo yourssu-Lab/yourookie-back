@@ -5,6 +5,8 @@ import com.yourssu.openssupot.spacehub.application.support.authentication.Authen
 import com.yourssu.openssupot.spacehub.domain.domain.organization.CreateOrganizationResult
 import com.yourssu.openssupot.spacehub.domain.domain.organization.OrganizationService
 import com.yourssu.openssupot.spacehub.domain.domain.organization.ReadOrganizationsResult
+import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
 import java.net.URI
 import org.springframework.http.HttpStatus
@@ -19,10 +21,14 @@ import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.multipart.MultipartFile
 
 @RestController
+@Tag(name = "Organization", description = "단체 API")
 class OrganizationController(
     private val organizationService: OrganizationService
 ) {
 
+    @Operation(
+        summary = "단체 생성",
+    )
     @PostMapping("/organizations")
     fun create(
         @RequestPart(required = false) image: MultipartFile?,
@@ -35,6 +41,9 @@ class OrganizationController(
         return ResponseEntity.created(URI.create("/organizations/$organizationId")).body(response)
     }
 
+    @Operation(
+        summary = "이메일 중복 검사",
+    )
     @GetMapping("/check-email")
     fun checkEmail(
         @RequestParam email: String,
@@ -45,6 +54,9 @@ class OrganizationController(
         return ResponseEntity.status(HttpStatus.OK).body(response)
     }
 
+    @Operation(
+        summary = "단체 정보 조회",
+    )
     @GetMapping("/organizations/{organizationId}")
     fun readById(
         @PathVariable organizationId: Long,
@@ -55,6 +67,9 @@ class OrganizationController(
         return ResponseEntity.status(HttpStatus.OK).body(response)
     }
 
+    @Operation(
+        summary = "단체 검색",
+    )
     @GetMapping("/organizations")
     fun readByName(
         @RequestParam name: String,
@@ -67,6 +82,9 @@ class OrganizationController(
         return ResponseEntity.status(HttpStatus.OK).body(response)
     }
 
+    @Operation(
+        summary = "단체 정보 수정",
+    )
     @PatchMapping("/organizations/{organizationId}")
     fun update(
         @AuthenticationOrganization authInfo: AuthenticationOrganizationInfo,

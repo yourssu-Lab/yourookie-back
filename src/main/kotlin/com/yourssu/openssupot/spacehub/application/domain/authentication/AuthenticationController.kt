@@ -4,6 +4,8 @@ import com.yourssu.openssupot.spacehub.domain.domain.authentication.Authenticati
 import com.yourssu.openssupot.spacehub.domain.domain.authentication.LoginResultDto
 import com.yourssu.openssupot.spacehub.domain.domain.authentication.TokenDto
 import com.yourssu.openssupot.spacehub.domain.support.security.token.TokenType
+import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
 import java.time.LocalDateTime
 import org.springframework.http.HttpHeaders
@@ -15,10 +17,14 @@ import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
+@Tag(name = "Authentication", description = "인증 API")
 class AuthenticationController(
     private val authenticationService: AuthenticationService,
 ) {
 
+    @Operation(
+        summary = "회원가입",
+    )
     @PostMapping("/login")
     fun login(
         @RequestBody @Valid request: LoginRequest,
@@ -29,6 +35,9 @@ class AuthenticationController(
         return ResponseEntity.ok(response)
     }
 
+    @Operation(
+        summary = "로그아웃",
+    )
     @PostMapping("/logout")
     fun logout(
         @RequestHeader(HttpHeaders.AUTHORIZATION) accessToken: String,
@@ -39,6 +48,9 @@ class AuthenticationController(
         return ResponseEntity.noContent().build()
     }
 
+    @Operation(
+        summary = "토큰 유효성 검사",
+    )
     @GetMapping("/token-validate")
     fun validateToken(
         @RequestHeader(HttpHeaders.AUTHORIZATION) accessToken: String,
@@ -49,6 +61,9 @@ class AuthenticationController(
         return ResponseEntity.ok(response)
     }
 
+    @Operation(
+        summary = "토큰 갱신",
+    )
     @PostMapping("/token-refresh")
     fun refreshToken(
         @RequestBody @Valid request: TokenRefreshRequest,
@@ -60,6 +75,9 @@ class AuthenticationController(
         return ResponseEntity.ok(response)
     }
 
+    @Operation(
+        summary = "회원탈퇴",
+    )
     @PostMapping("/withdrawal")
     fun withdraw(
         @RequestHeader(HttpHeaders.AUTHORIZATION) accessToken: String,
